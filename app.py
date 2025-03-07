@@ -108,13 +108,13 @@ def admin_dashboard():
             description = request.form['chapter_description']
             subject_id = request.form.get('subject_id')
 
-        if not subject_id:  # Ensure subject_id is not None or empty
-            flash("Please select a valid subject!", "warning")
-        else:
-            new_chapter = Chapter(chapter_name=chapter_name, description=description, subject_id=int(subject_id))
-            db.session.add(new_chapter)
-            db.session.commit()
-            flash("Chapter added successfully!", "success")
+            if not subject_id:  # Ensure subject_id is not None or empty
+                flash("Please select a valid subject!", "warning")
+            else:
+                new_chapter = Chapter(chapter_name=chapter_name, description=description, subject_id=int(subject_id))
+                db.session.add(new_chapter)
+                db.session.commit()
+                flash("Chapter added successfully!", "success")
 
         # elif action == "add_chapter":
         #     chapter_name = request.form['chapter_name']
