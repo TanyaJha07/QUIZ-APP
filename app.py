@@ -81,9 +81,54 @@ def login():
 
     return render_template('login.html')
 
-@app.route('/admin_dashboard')
+@app.route('/admin_dashboard', methods=['GET', 'POST'])
 def admin_dashboard():
-    return render_template('admin_dashboard.html')
+    if "user_id" not in session or session['user_role'] != 'admin':
+        flash("Unauthorized access!", "danger")
+        return redirect(url_for("login"))
+
+    if request.method == "POST":
+        action = request.form.get("action")
+
+        if action == "add_subject":
+            subject_name = request.form['subject_name']
+            description = request.form['subject_description']
+            
+            # Check if subject already exists
+            existing_subject = Subject.query.filter_by(subject_name=subject_name).first()
+            if existing_subject:
+                flash("Subject already exists!", "warning")
+            else:
+                new_subject = Subject(subject_name=subject_name, description=description)
+                db.session.add(new_subject)
+                db.session.commit()
+                flash("Subject added successfully!", "success")
+        elif action == "add_chapter":
+            chapter_name = request.form['chapter_name']
+            description = request.form['chapter_description']
+            subject_id = request.form.get('subject_id')
+
+        if not subject_id:  # Ensure subject_id is not None or empty
+            flash("Please select a valid subject!", "warning")
+        else:
+            new_chapter = Chapter(chapter_name=chapter_name, description=description, subject_id=int(subject_id))
+            db.session.add(new_chapter)
+            db.session.commit()
+            flash("Chapter added successfully!", "success")
+
+        # elif action == "add_chapter":
+        #     chapter_name = request.form['chapter_name']
+        #     description = request.form['chapter_description']
+        #     subjectid = request.form['subject_id']
+
+        #     new_chapter = Chapter(chapter_name=chapter_name, description=description)
+        #     db.session.add(new_chapter)
+        #     db.session.commit()
+        #     flash("Chapter added successfully!", "success")
+
+    # Fetch all subjects to show in the dropdown for adding chapters
+    subjects = Subject.query.all()
+    return render_template("admin_dashboard.html", subjects=subjects)
 
 @app.route('/user_dashboard')   
 def user_dashboard():  

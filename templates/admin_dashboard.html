@@ -3,6 +3,44 @@
 {% block title %}Quizzy {% endblock %}
 
 {% block content %}
-    <h1>Welcome to the Quiz App aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</h1>
+    <h1>Welcome to the Quiz App</h1>
     <p>Get ready to test your knowledge!</p>
+    
+    <h2>Add Subject</h2>
+    <form method="POST">
+        <input type="hidden" name="action" value="add_subject">
+        <label>Subject Name:</label>
+        <input type="text" name="subject_name" required>
+        <label>Description:</label>
+        <input type="text" name="subject_description">
+        <button type="submit">Add Subject</button>
+    </form>
+
+    <h2>Add Chapter</h2>
+    <form method="POST">
+        <input type="hidden" name="action" value="add_chapter">
+        <label>Chapter Name:</label>
+        <input type="text" name="chapter_name" required>
+        <label>Description:</label>
+        <input type="text" name="chapter_description">
+        <label>Select Subject:</label>
+        <select name="subject_id" required>
+            <option value="">-- Select Subject --</option>
+            {% for subject in subjects %}
+            <option value="{{ subject.id }}">{{ subject.subject_name }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Add Chapter</button>
+    </form>
+
+    <h2>Existing Subjects & Chapters</h2>
+    {% for subject in subjects %}
+        <h3>{{ subject.subject_name }}</h3>
+        <p>{{ subject.description }}</p>
+        <ul>
+            {% for chapter in subject.chapters %}
+            <li>{{ chapter.chapter_name }} - {{ chapter.description }}</li>
+            {% endfor %}
+        </ul>
+    {% endfor %}
 {% endblock %}
