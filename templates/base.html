@@ -20,6 +20,7 @@
             padding: 0;
             margin: 0;
             display: flex;
+            align-items: center;
         }
         nav ul li {
             margin-right: 20px;
@@ -44,6 +45,28 @@
             bottom: 0;
             width: 100%;
         }
+        /* Search Form Styling */
+        .search-form {
+            display: flex;
+            align-items: center;
+        }
+        .search-form input {
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+        }
+        .search-form button {
+            padding: 5px 10px;
+            background-color: #0f0c08;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            margin-left: 5px;
+        }
+        .search-form button:hover {
+            background-color: #5b5957;
+        }
     </style>
 </head>
 <body>
@@ -53,6 +76,13 @@
             <li><a href="{{ url_for('quiz') }}">Quiz</a></li>
             <li><a href="{{ url_for('summary') }}">Summary</a></li>
             <li><a href="{{ url_for('logout') }}">Logout</a></li>
+            <li>
+                <!-- Search Form Inside Navbar -->
+                <form action="{{ url_for('search') }}" method="GET" class="search-form">
+                    <input type="text" name="query" placeholder="Search..." required>
+                    <button type="submit">Search</button>
+                </form>
+            </li>
         </ul>
     </nav>
 

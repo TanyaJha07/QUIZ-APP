@@ -11,9 +11,8 @@ db.init_app(app)
 with app.app_context():
     db.create_all() 
 
-    # Create a predefined admin user if not exists
     admin_email = "admin@example.com"
-    admin_password = "aaaaa"  # Consider hashing for security
+    admin_password = "aaaaa" 
 
     admin_user = User.query.filter_by(email=admin_email).first()
     
@@ -42,10 +41,15 @@ def signup():
         email = request.form['email']
         password = request.form['password']
         qualification = request.form['qualification']
-        dob_string = request.form['dob']  # Ensure correct variable name
+        dob_string = request.form['dob']  
 
-        dob = datetime.strptime(dob_string, "%Y-%m-%d").date()  # Corrected
+        dob = datetime.strptime(dob_string, "%Y-%m-%d").date()  
+        existing_user = User.query.filter_by(email=email).first()
 
+        if existing_user:
+            flash("Email is already registered. Please login or use a different email.", "danger")
+            return redirect(url_for('signup'))
+        
         user = User(username=username, email=email, password=password, qualification=qualification, dob=dob)
         db.session.add(user)
         db.session.commit()
@@ -82,9 +86,11 @@ def admin_dashboard():
     return render_template('admin_dashboard.html')
 
 @app.route('/user_dashboard')   
-def user_dashboard():   
+def user_dashboard():  
+    if "user_id" not in session or session['user_role'] != 'user':
+        flash("Please login as a user to access this page.", "danger")
+        return redirect(url_for("login")) 
     return render_template('user_dashboard.html')
-
 
 @app.route('/quiz')
 def quiz():
@@ -98,6 +104,9 @@ def summary():
 def score():   
     return render_template('score.html')
 
+@app.route('/search')   
+def search():   
+    return render_template('search.html')
 
 @app.route('/logout')
 def logout():
