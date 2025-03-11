@@ -129,6 +129,19 @@ def admin_dashboard():
     # Fetch all subjects to show in the dropdown for adding chapters
     subjects = Subject.query.all()
     return render_template("admin_dashboard.html", subjects=subjects)
+@app.route('/edit_subject/<int:subject_id>', methods=['GET', 'POST'])
+def edit_subject(subject_id):
+    subject = Subject.query.get_or_404(subject_id)
+
+    if request.method == 'POST':
+        subject.subject_name = request.form['subject_name']
+        subject.description = request.form['subject_description']
+        db.session.commit()
+        return redirect(url_for('admin_dashboard'))
+
+    return render_template('edit_subject.html', subject=subject)
+
+
 
 @app.route('/user_dashboard')   
 def user_dashboard():  

@@ -5,15 +5,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Quiz App{% endblock %}</title>
     <style>
+        /* General Styling */
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        input, select {
+            border: 2px solid #3a3d98;
+            border-radius: 10px;
+            padding: 10px;
+        }
+        button {
+            font-size: 16px;
+            font-weight: bold;
+        }
+                
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Poppins', Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f4f4f4;
+            background-color: #eef1f6;
+            color: #333;
         }
+
+        /* Navbar Styling */
         nav {
-            background-color: #333;
-            padding: 10px;
+            background: linear-gradient(135deg, #3a3d98, #0f0c08);
+            padding: 15px 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         nav ul {
             list-style: none;
@@ -29,43 +50,75 @@
             color: white;
             text-decoration: none;
             font-weight: bold;
+            font-size: 16px;
+            transition: color 0.3s;
         }
         nav ul li a:hover {
-            text-decoration: underline;
+            color: #f4d03f;
         }
-        main {
-            padding: 20px;
-        }
-        footer {
-            text-align: center;
-            padding: 1px;
-            background-color: #333;
-            color: white;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-        }
+
         /* Search Form Styling */
         .search-form {
             display: flex;
             align-items: center;
+            background: white;
+            border-radius: 25px;
+            padding: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         .search-form input {
-            padding: 5px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
+            padding: 10px;
+            border: none;
+            border-radius: 25px;
+            outline: none;
+            width: 200px;
+            font-size: 14px;
         }
         .search-form button {
-            padding: 5px 10px;
-            background-color: #0f0c08;
+            padding: 8px 15px;
+            background-color: #3a3d98;
             color: white;
             border: none;
-            border-radius: 3px;
+            border-radius: 25px;
             cursor: pointer;
-            margin-left: 5px;
+            font-size: 14px;
+            transition: background 0.3s;
         }
         .search-form button:hover {
-            background-color: #5b5957;
+            background-color: #272a73;
+        }
+
+        /* Flash Message Styling */
+        .alert {
+            padding: 10px;
+            margin: 10px auto;
+            width: 90%;
+            border-radius: 5px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .alert-success { background-color: #2ecc71; color: white; }
+        .alert-danger { background-color: #e74c3c; color: white; }
+        .alert-warning { background-color: #f39c12; color: white; }
+
+        /* Main Content */
+        main {
+            padding: 40px;
+            text-align: center;
+            max-width: 800px;
+            margin: auto;
+        }
+
+        /* Footer Styling */
+        footer {
+            text-align: center;
+            padding: 10px;
+            background: linear-gradient(135deg, #3a3d98, #0f0c08);
+            color: white;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -77,23 +130,24 @@
             <li><a href="{{ url_for('summary') }}">Summary</a></li>
             <li><a href="{{ url_for('logout') }}">Logout</a></li>
             <li>
-                <!-- Search Form Inside Navbar -->
+                <!-- Beautiful Search Form -->
                 <form action="{{ url_for('search') }}" method="GET" class="search-form">
                     <input type="text" name="query" placeholder="Search..." required>
-                    <button type="submit">Search</button>
+                    <button type="submit">🔍</button>
                 </form>
             </li>
         </ul>
     </nav>
+
     {% with messages = get_flashed_messages(with_categories=True) %}
-  {% if messages %}
-    {% for category, message in messages %}
-      <div class="alert alert-{{ category }}">
-        {{ message }}
-      </div>
-    {% endfor %}
-  {% endif %}
-{% endwith %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
 
     <main>
         {% block content %}
@@ -101,7 +155,7 @@
     </main>
 
     <footer>
-        <p>&copy; 2025 Quiz App</p>
+        <p>&copy; 2025 Quiz App | All rights reserved</p>
     </footer>
 </body>
 </html>

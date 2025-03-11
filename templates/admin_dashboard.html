@@ -1,90 +1,107 @@
 {% extends 'base.html' %}
 
-{% block title %}Quizzy{% endblock %}
+{% block title %}Quizzy - Admin Dashboard{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
     <h1 class="text-center fw-bold" style="color: #2c3e50;">Welcome to the Quiz App</h1>
-    <p class="text-center" style="color: #7f8c8d;">Get ready to test your knowledge!</p>
+    <p class="text-center" style="color: #7f8c8d; font-size: 14px;">Get ready to test your knowledge!</p>
 
-    <div class="row justify-content-center">
+    <div style="display: flex; justify-content: center; gap: 30px; margin-top: 20px;">
         <!-- Add Subject Form -->
-        <div class="col-lg-6 col-md-8 mb-4">
-            <div class="card border-0 shadow-sm rounded-4">
-                <div class="card-body p-4">
-                    <h3 class="mb-3 text-center" style="color: #34495e;">Add Subject</h3>
-                    <form method="POST">
-                        <input type="hidden" name="action" value="add_subject">
-                        <table class="table table-bordered">
-                            <tr>
-                                <th>Subject Name</th>
-                                <td><input type="text" class="form-control" name="subject_name" required></td>
-                            </tr>
-                            <tr>
-                                <th>Description</th>
-                                <td><input type="text" class="form-control" name="subject_description"></td>
-                            </tr>
-                        </table>
-                        <div class="text-center mt-3">
-                            <button type="submit" class="btn btn-dark rounded-3">Add Subject</button>
-                        </div>
-                    </form>
+        <div style="width: 45%; background: #ffffff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+            <h3 style="text-align: center; color: #34495e; margin-bottom: 20px;">Add Subject</h3>
+            <form method="POST">
+                <input type="hidden" name="action" value="add_subject">
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 5px;">Subject Name</label>
+                    <input type="text" name="subject_name" required 
+                           style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);">
                 </div>
-            </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 5px;">Description</label>
+                    <input type="text" name="subject_description" 
+                           style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);">
+                </div>
+                
+                <div style="text-align: center; margin-top: 20px;">
+                    <button type="submit" 
+                            style="background: #007bff; color: white; border: none; padding: 12px 20px; border-radius: 8px; 
+                                   cursor: pointer; box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); font-size: 16px;">
+                        ➕ Add Subject
+                    </button>
+                </div>
+            </form>
         </div>
-
+    
         <!-- Add Chapter Form -->
-        <div class="col-lg-6 col-md-8 mb-4">
-            <div class="card border-0 shadow-sm rounded-4">
-                <div class="card-body p-4">
-                    <h3 class="mb-3 text-center" style="color: #34495e;">Add Chapter</h3>
-                    <form method="POST">
-                        <input type="hidden" name="action" value="add_chapter">
-                        <table class="table table-bordered">
-                            <tr>
-                                <th>Chapter Name</th>
-                                <td><input type="text" class="form-control" name="chapter_name" required></td>
-                            </tr>
-                            <tr>
-                                <th>Description</th>
-                                <td><input type="text" class="form-control" name="chapter_description"></td>
-                            </tr>
-                            <tr>
-                                <th>Select Subject</th>
-                                <td>
-                                    <select class="form-select" name="subject_id" required>
-                                        <option value="">-- Select Subject --</option>
-                                        {% for subject in subjects %}
-                                        <option value="{{ subject.id }}">{{ subject.subject_name }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </td>
-                            </tr>
-                        </table>
-                        <div class="text-center mt-3">
-                            <button type="submit" class="btn btn-dark rounded-3">Add Chapter</button>
-                        </div>
-                    </form>
+        <div style="width: 45%; background: #ffffff; padding: 20px; border-radius: 12px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+            <h3 style="text-align: center; color: #34495e; margin-bottom: 20px;">Add Chapter</h3>
+            <form method="POST">
+                <input type="hidden" name="action" value="add_chapter">
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 5px;">Chapter Name</label>
+                    <input type="text" name="chapter_name" required 
+                           style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);">
                 </div>
-            </div>
+                
+                <div style="margin-bottom: 15px;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 5px;">Description</label>
+                    <input type="text" name="chapter_description" 
+                           style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);">
+                </div>
+    
+                <div style="margin-bottom: 15px;">
+                    <label style="font-weight: bold; display: block; margin-bottom: 5px;">Select Subject</label>
+                    <select name="subject_id" required 
+                            style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1); background-color: white;">
+                        <option value="">-- Select Subject --</option>
+                        {% for subject in subjects %}
+                        <option value="{{ subject.id }}">{{ subject.subject_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+    
+                <div style="text-align: center; margin-top: 20px;">
+                    <button type="submit" 
+                            style="background: #007bff; color: white; border: none; padding: 12px 20px; border-radius: 8px; 
+                                   cursor: pointer; box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); font-size: 16px;">
+                        📖 Add Chapter
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
-
+        
     <!-- Existing Subjects & Chapters -->
     <div class="mt-5">
-        <h2 class="text-center fw-bold" style="color: #2c3e50;">Existing Subjects & Chapters</h2>
+        <h2 class="text-center fw-bold" style="color: #2c3e50;"> Existing Subjects & Chapters</h2>
         {% for subject in subjects %}
-            <div class="card border-0 shadow-sm rounded-4 mt-3">
+            <div class="card border-0 shadow-sm rounded-4 mt-3" style="background: #ffffff;">
                 <div class="card-body p-4">
-                    <h4 class="mb-2" style="color: #2c3e50;">{{ subject.subject_name }}</h4>
-                    <p class="text-muted">{{ subject.description }}</p>
+                    <h4 class="mb-2 fw-bold" style="color: #2c3e50;">{{ subject.subject_name }}</h4>
+                    <p class="text-muted">{{ subject.description }}</p>  
                     <ul class="list-group list-group-flush">
                         {% for chapter in subject.chapters %}
-                        <li class="list-group-item" style="border: none; background: #f8f9fa;">{{ chapter.chapter_name }} - <span class="text-muted">{{ chapter.description }}</span></li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center"
+                            style="border: none; background: #f8f9fa; padding: 10px;">
+                            <span class="fw-bold text-dark">{{ chapter.chapter_name }}</span>
+                            <span class="text-muted">{{ chapter.description }}</span>
+                        </li>
+                        {% else %}
+                        <li class="list-group-item text-muted text-center" 
+                            style="border: none; background: #f8f9fa; padding: 10px;">
+                            No chapters available
+                        </li>
                         {% endfor %}
                     </ul>
                 </div>
             </div>
+        {% else %}
+            <p class="text-center text-muted">No subjects available. Add a new subject to get started.</p>
         {% endfor %}
     </div>
 </div>
