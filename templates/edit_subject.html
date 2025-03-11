@@ -1,21 +1,36 @@
 {% extends 'base.html' %}
 
-{% block title %}Quizzy - Admin Dashboard{% endblock %}
+{% block title %}Quizzy - Edit Subject{% endblock %}
 
 {% block content %}
-    <h1>Edit Subject</h1>
+<div style="max-width: 600px; margin: 50px auto; background: #ffffff; padding: 20px; border-radius: 12px; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); text-align: center;">
+    <h2 style="color: #34495e; font-weight: bold;">Edit Subject</h2>
+    
     <form method="POST">
         <input type="hidden" name="action" value="edit_subject">
-        <div class="mb-3">
-            <label class="form-label fw-bold">Subject Name</label>
-            <input type="text" class="form-control rounded-3 shadow-sm" name="subject_name" value="{{ subject.subject_name }}" required>
+        
+        <div style="margin-bottom: 15px; text-align: left;">
+            <label style="font-weight: bold; display: block; margin-bottom: 5px;">Subject Name</label>
+            <input type="text" name="subject_name" value="{{ subject.subject_name }}" required
+                   style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; 
+                          box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);">
         </div>
-        <div class="mb-3">
-            <label class="form-label fw-bold">Description</label>
-            <input type="text" class="form-control rounded-3 shadow-sm" name="subject_description" value="{{ subject.description }}">
+        
+        <div style="margin-bottom: 15px; text-align: left;">
+            <label style="font-weight: bold; display: block; margin-bottom: 5px;">Description</label>
+            <input type="text" name="subject_description" value="{{ subject.description }}"
+                   style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; 
+                          box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);">
         </div>
-        <div class="text-center mt-3">
-            <button type="submit" class="btn btn-primary rounded-3 px-4 py-2 shadow">✏️ Edit Subject</button>
+        
+        <div style="margin-top: 20px;">
+            <button type="submit" 
+                    style="background: #007bff; color: white; border: none; padding: 12px 20px; border-radius: 8px; 
+                           cursor: pointer; box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); font-size: 16px;">
+                ✏️ Edit Subject
+            </button>
         </div>
     </form>
+</div>
 {% endblock %}

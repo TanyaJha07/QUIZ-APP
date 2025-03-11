@@ -116,17 +116,7 @@ def admin_dashboard():
                 db.session.commit()
                 flash("Chapter added successfully!", "success")
 
-        # elif action == "add_chapter":
-        #     chapter_name = request.form['chapter_name']
-        #     description = request.form['chapter_description']
-        #     subjectid = request.form['subject_id']
-
-        #     new_chapter = Chapter(chapter_name=chapter_name, description=description)
-        #     db.session.add(new_chapter)
-        #     db.session.commit()
-        #     flash("Chapter added successfully!", "success")
-
-    # Fetch all subjects to show in the dropdown for adding chapters
+  # Fetch all subjects to show in the dropdown for adding chapters
     subjects = Subject.query.all()
     return render_template("admin_dashboard.html", subjects=subjects)
 @app.route('/edit_subject/<int:subject_id>', methods=['GET', 'POST'])
@@ -140,7 +130,6 @@ def edit_subject(subject_id):
         return redirect(url_for('admin_dashboard'))
 
     return render_template('edit_subject.html', subject=subject)
-
 
 
 @app.route('/user_dashboard')   

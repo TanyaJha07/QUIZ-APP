@@ -3,7 +3,7 @@
 {% block title %}Quizzy - Admin Dashboard{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
+<div class="container mt-2">
     <h1 class="text-center fw-bold" style="color: #2c3e50;">Welcome to the Quiz App</h1>
     <p class="text-center" style="color: #7f8c8d; font-size: 14px;">Get ready to test your knowledge!</p>
 
@@ -75,42 +75,51 @@
             </form>
         </div>
     </div>
-        
-    <!-- Existing Subjects & Chapters -->
-<!-- Existing Subjects & Chapters -->
-<div style="margin-top: 40px;">
-    <h2 style="text-align: center; font-weight: bold; color: #2c3e50;">Existing Subjects & Chapters</h2>
+        <!-- subject visibility  -->
+    <div style="margin-top: 40px;">
+        <h2 style="text-align: center; font-weight: bold; color: #2c3e50;">Existing Subjects & Chapters</h2>
+    
+        {% for subject in subjects %}
+            <div style="width: 90%; margin: 20px auto; background: #ffffff; padding: 20px; border-radius: 12px; 
+                        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
+                <h3 style="color: #34495e; text-align: center; font-weight: bold; margin-bottom: 10px;">
+                    {{ subject.subject_name }}
+                </h3>
+                <p style="text-align: center; color: #7f8c8d; font-size: 14px; margin-bottom: 20px;">
+                    {{ subject.description }}
+                </p>
+    
+                <!-- Edit Subject Button -->
+                <div style="text-align: center; margin-bottom: 15px;">
+                    <a href="{{ url_for('edit_subject', subject_id=subject.id) }}" 
+                       style="display: inline-block; background: #ffc107; color: #ffffff; padding: 8px 15px; border-radius: 8px; 
+                              text-decoration: none; font-weight: bold; box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);">
+                         Edit Subject
+                    </a>
+                </div>
 
-    {% for subject in subjects %}
-        <div style="width: 90%; margin: 20px auto; background: #ffffff; padding: 20px; border-radius: 12px; 
-                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);">
-            <h3 style="color: #34495e; text-align: center; font-weight: bold; margin-bottom: 10px;">
-                {{ subject.subject_name }}
-            </h3>
-            <p style="text-align: center; color: #7f8c8d; font-size: 14px; margin-bottom: 20px;">
-                {{ subject.description }}
-            </p>
-
-            <ul style="list-style: none; padding: 0; margin: 0;">
-                {% for chapter in subject.chapters %}
-                    <li style="display: flex; justify-content: space-between; align-items: center; 
-                               background: #f8f9fa; padding: 10px; border-radius: 8px; 
-                               margin-bottom: 5px; box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);">
-                        <span style="font-weight: bold; color: #343a40;">{{ chapter.chapter_name }}</span>
-                        <span style="color: #6c757d;">{{ chapter.description }}</span>
-                    </li>
-                {% else %}
-                    <li style="text-align: center; color: #6c757d; background: #f8f9fa; padding: 10px; 
-                               border-radius: 8px; box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);">
-                        No chapters available
-                    </li>
-                {% endfor %}
-            </ul>
-        </div>
-    {% else %}
-        <p style="text-align: center; color: #6c757d;">No subjects available. Add a new subject to get started.</p>
-    {% endfor %}
-</div>
+    
+                <ul style="list-style: none; padding: 0; margin: 0;">
+                    {% for chapter in subject.chapters %}
+                        <li style="display: flex; justify-content: space-between; align-items: center; 
+                                   background: #f8f9fa; padding: 10px; border-radius: 8px; 
+                                   margin-bottom: 5px; box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);">
+                            <span style="font-weight: bold; color: #343a40;">{{ chapter.chapter_name }}</span>
+                            <span style="color: #6c757d;">{{ chapter.description }}</span>
+                        </li>
+                    {% else %}
+                        <li style="text-align: center; color: #6c757d; background: #f8f9fa; padding: 10px; 
+                                   border-radius: 8px; box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);">
+                            No chapters available
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% else %}
+            <p style="text-align: center; color: #6c757d;">No subjects available. Add a new subject to get started.</p>
+        {% endfor %}
+    </div>
+    
 
 </div>
 {% endblock %}
