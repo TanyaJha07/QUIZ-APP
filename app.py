@@ -131,6 +131,33 @@ def edit_subject(subject_id):
 
     return render_template('edit_subject.html', subject=subject)
 
+@app.route('/delete_subject/<int:subject_id>', methods=['POST'])
+def delete_subject(subject_id):
+    if "user_id" not in session or session['user_role'] != 'admin':
+        flash("Unauthorized access!", "danger")
+        return redirect(url_for("login"))
+
+    subject = Subject.query.get_or_404(subject_id)
+    
+    # Ensure all related chapters are deleted first
+    Chapter.query.filter_by(subject_id=subject_id).delete()
+    
+    db.session.delete(subject)
+    db.session.commit()
+    flash("Subject deleted successfully!", "success")
+    return redirect(url_for('admin_dashboard'))
+
+@app.route('/delete_chapter/<int:chapter_id>', methods=['POST'])
+def delete_chapter(chapter_id):
+    if "user_id" not in session or session['user_role'] != 'admin':
+        flash("Unauthorized access!", "danger")
+        return redirect(url_for("login"))
+
+    chapter = Chapter.query.get_or_404(chapter_id)
+    db.session.delete(chapter)
+    db.session.commit()
+    flash("Chapter deleted successfully!", "success")
+    return redirect(url_for('admin_dashboard'))
 
 @app.route('/user_dashboard')   
 def user_dashboard():  
