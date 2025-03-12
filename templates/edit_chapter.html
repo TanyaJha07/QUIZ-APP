@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block title %}Quiz Master - Edit Chapter{% endblock %}
+
+{% block content %}
+<div style="max-width: 600px; margin: 50px auto; background: #ffffff; padding: 20px; border-radius: 12px; 
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); text-align: center;">
+    <h2 style="color: #34495e; font-weight: bold;">Edit Chapter</h2>
+    
+    <form method="POST">
+        <div style="margin-bottom: 15px; text-align: left;">
+            <label style="font-weight: bold; display: block; margin-bottom: 5px;">Chapter Name</label>
+            <input type="text" name="chapter_name" value="{{ chapter.chapter_name }}" required
+                   style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; 
+                          box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);">
+        </div>
+        
+        <div style="margin-bottom: 15px; text-align: left;">
+            <label style="font-weight: bold; display: block; margin-bottom: 5px;">Description</label>
+            <input type="text" name="chapter_description" value="{{ chapter.description }}"
+                   style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; 
+                          box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);">
+        </div>
+        
+        <div style="margin-bottom: 15px; text-align: left;">
+            <label style="font-weight: bold; display: block; margin-bottom: 5px;">Subject</label>
+            <input type="text" value="{{ chapter.subject.subject_name }}" disabled
+                   style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; 
+                          background: #f9f9f9; box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);">
+        </div>
+        
+        <div style="margin-top: 20px;">
+            <button type="submit" 
+                    style="background: #007bff; color: white; border: none; padding: 12px 20px; border-radius: 8px; 
+                           cursor: pointer; box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); font-size: 16px;">
+                ✏️ Edit Chapter
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -131,6 +131,18 @@ def edit_subject(subject_id):
 
     return render_template('edit_subject.html', subject=subject)
 
+@app.route('/edit_chapter/<int:chapter_id>', methods=['GET', 'POST'])
+def edit_chapter(chapter_id):
+    chapter = Chapter.query.get_or_404(chapter_id)
+
+    if request.method == 'POST':
+        chapter.chapter_name = request.form['chapter_name']
+        chapter.description = request.form['chapter_description']
+        db.session.commit()
+        return redirect(url_for('admin_dashboard'))
+
+    return render_template('edit_chapter.html', chapter=chapter)
+
 @app.route('/delete_subject/<int:subject_id>', methods=['POST'])
 def delete_subject(subject_id):
     if "user_id" not in session or session['user_role'] != 'admin':
