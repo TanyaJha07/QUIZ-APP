@@ -21,7 +21,8 @@ class Chapter(db.Model):
     description = db.Column(db.String(255), nullable=True)
     subject_id = db.Column(db.Integer, db.ForeignKey('subject.id'), nullable=False)
     subject = db.relationship('Subject', backref=db.backref('chapters', lazy=True))
-
+    questions = db.relationship('Question', backref='chapter', lazy=True) 
+    
 class Quiz(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     chapter_id = db.Column(db.Integer, db.ForeignKey('chapter.id'), nullable=False)
@@ -31,13 +32,13 @@ class Quiz(db.Model):
 
 class Question(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    quiz_id = db.Column(db.Integer, db.ForeignKey('quiz.id'), nullable=False)
     question_statement = db.Column(db.Text, nullable=False)
     option1 = db.Column(db.String(255), nullable=False)
     option2 = db.Column(db.String(255), nullable=False)
     option3 = db.Column(db.String(255), nullable=False)
     option4 = db.Column(db.String(255), nullable=False)
     correct_answer = db.Column(db.String(255), nullable=False)
+    chapter_id = db.Column(db.Integer, db.ForeignKey('chapter.id'), nullable=False)
 
 class Score(db.Model):
     id = db.Column(db.Integer, primary_key=True)

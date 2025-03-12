@@ -103,6 +103,7 @@ def admin_dashboard():
                 db.session.add(new_subject)
                 db.session.commit()
                 flash("Subject added successfully!", "success")
+
         elif action == "add_chapter":
             chapter_name = request.form['chapter_name']
             description = request.form['chapter_description']
@@ -116,9 +117,37 @@ def admin_dashboard():
                 db.session.commit()
                 flash("Chapter added successfully!", "success")
 
-  # Fetch all subjects to show in the dropdown for adding chapters
+        elif action == "add_question":
+            question_statement = request.form['question_statement']
+            option1 = request.form['option1']
+            option2 = request.form['option2']
+            option3 = request.form['option3']
+            option4 = request.form['option4']
+            correct_answer = request.form['correct_answer']
+            chapter_id = request.form.get('chapter_id')
+
+            if not chapter_id:  # Ensure chapter_id is valid
+                flash("Please select a valid chapter!", "warning")
+            else:
+                new_question = Question(
+                    question_statement=question_statement,
+                    option1=option1,
+                    option2=option2,
+                    option3=option3,
+                    option4=option4,
+                    correct_answer=correct_answer,
+                    chapter_id=int(chapter_id)
+                )
+                db.session.add(new_question)
+                db.session.commit()
+                flash("Question added successfully!", "success")
+
+    # Fetch all subjects & chapters for dropdowns
     subjects = Subject.query.all()
-    return render_template("admin_dashboard.html", subjects=subjects)
+    chapters = Chapter.query.all()
+
+    return render_template("admin_dashboard.html", subjects=subjects, chapters=chapters)
+
 @app.route('/edit_subject/<int:subject_id>', methods=['GET', 'POST'])
 def edit_subject(subject_id):
     subject = Subject.query.get_or_404(subject_id)
@@ -170,6 +199,45 @@ def delete_chapter(chapter_id):
     db.session.commit()
     flash("Chapter deleted successfully!", "success")
     return redirect(url_for('admin_dashboard'))
+
+@app.route('/add_question', methods=['GET', 'POST'])
+def add_question():
+    if "user_id" not in session or session['user_role'] != 'admin':
+        flash("Unauthorized access!", "danger")
+        return redirect(url_for("login"))
+
+    if request.method == 'POST':
+        question_statement = request.form.get('question_statement')
+        option1 = request.form.get('option1')
+        option2 = request.form.get('option2')
+        option3 = request.form.get('option3')
+        option4 = request.form.get('option4')
+        correct_answer = request.form.get('correct_answer')
+        quiz_id = request.form.get('quiz_id')  # Select quiz, not chapter
+
+        # Validate required fields
+        if not (question_statement and option1 and option2 and option3 and option4 and correct_answer and quiz_id):
+            flash("All fields are required!", "danger")
+            return redirect(url_for("add_question"))
+
+        # Create new question
+        new_question = Question(
+            question_statement=question_statement,
+            option1=option1,
+            option2=option2,
+            option3=option3,
+            option4=option4,
+            correct_answer=correct_answer,
+            quiz_id=int(quiz_id)  # Ensure it's an integer
+        )
+        db.session.add(new_question)
+        db.session.commit()
+        flash("Question added successfully!", "success")
+        return redirect(url_for('admin_dashboard'))
+
+    quizzes = Quiz.query.all()  # Fetch quizzes instead of chapters
+    return render_template('add_question.html', quizzes=quizzes)
+
 
 @app.route('/user_dashboard')   
 def user_dashboard():  

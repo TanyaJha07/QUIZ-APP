@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}Quizzy - ADD QUESTION {% endblock %}
+
+{% block content %}
+
+<form method="POST">
+    <label>Question Statement:</label>
+    <input type="text" name="question_statement" required><br>
+
+    <label>Option 1:</label>
+    <input type="text" name="option1" required><br>
+
+    <label>Option 2:</label>
+    <input type="text" name="option2" required><br>
+
+    <label>Option 3:</label>
+    <input type="text" name="option3" required><br>
+
+    <label>Option 4:</label>
+    <input type="text" name="option4" required><br>
+
+    <label>Correct Answer:</label>
+    <input type="text" name="correct_answer" required><br>
+
+    <label>Select Quiz:</label>
+    <select name="quiz_id" required>
+        {% for quiz in quizzes %}
+            <option value="{{ quiz.id }}">Quiz {{ quiz.id }}</option>
+        {% endfor %}
+    </select><br>
+
+    <button type="submit">Add Question</button>
+</form>
+
+{% endblock %}
