@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}Search Results{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2 class="text-center">Search Results for "{{ query }}"</h2>
+    <hr>
+    <div>
+        <h3>Subjects</h3>
+        {% if subjects %}
+            <ul>
+                {% for subject in subjects %}
+                    <li style="margin-bottom: 15px;">
+                        <strong>{{ subject.subject_name }}</strong> - {{ subject.description }}<br>
+                        {% set total_questions = 0 %}
+                        {% for chapter in subject.chapters %}
+                            {% set total_questions = total_questions + chapter.questions|length %}
+                        {% endfor %}
+                        <em>Total Questions in Subject:</em> {{ total_questions }}<br>
+                        <a href="{{ url_for('edit_subject', subject_id=subject.id) }}">Edit Subject</a>
+                        <br>
+                        <strong>Chapters:</strong>
+                        <ul>
+                            {% for chapter in subject.chapters %}
+                                <li>
+                                    {{ chapter.chapter_name }} - {{ chapter.description }} 
+                                    (<strong>{{ chapter.questions|length }} questions</strong>)
+                                    <a href="{{ url_for('edit_chapter', chapter_id=chapter.id) }}">Edit Chapter</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No subjects found matching your query.</p>
+        {% endif %}
+    </div>
+
+    <div>
+        <h3>Chapters</h3>
+        {% if chapters %}
+            <ul>
+                {% for chapter in chapters %}
+                    <li style="margin-bottom: 10px;">
+                        <strong>{{ chapter.chapter_name }}</strong> - {{ chapter.description }} 
+                        (<strong>{{ chapter.questions|length }} questions</strong>)
+                        <a href="{{ url_for('edit_chapter', chapter_id=chapter.id) }}">Edit Chapter</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No chapters found matching your query.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

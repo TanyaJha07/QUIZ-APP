@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session
 from models import User, db, Quiz, Question, Score, Subject, Chapter
 from datetime import datetime
+from sqlalchemy import or_
+
 
 app = Flask(__name__)
 
@@ -258,9 +260,28 @@ def summary():
 def score():   
     return render_template('score.html')
 
-@app.route('/search')   
-def search():   
-    return render_template('search.html')
+@app.route('/search')
+@app.route('/search')
+def search():
+    # Ensure only admin can access the search page
+    if "user_id" not in session or session.get("user_role") != "admin":
+        flash("Unauthorized access!", "danger")
+        return redirect(url_for("login"))
+    
+    query = request.args.get("query", "").strip()
+    subjects = []
+    chapters = []
+    
+    if query:
+        subjects = Subject.query.filter(Subject.subject_name.ilike(f"%{query}%")).union(
+            Subject.query.filter(Subject.description.ilike(f"%{query}%"))
+        ).all()
+        chapters = Chapter.query.filter(Chapter.chapter_name.ilike(f"%{query}%")).union(
+            Chapter.query.filter(Chapter.description.ilike(f"%{query}%"))
+        ).all()
+    
+    return render_template("search.html", query=query, subjects=subjects, chapters=chapters)
+
 
 @app.route('/logout')
 def logout():
