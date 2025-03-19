@@ -241,12 +241,14 @@ def add_question():
     return render_template('add_question.html', quizzes=quizzes)
 
 
-@app.route('/user_dashboard')   
-def user_dashboard():  
-    if "user_id" not in session or session['user_role'] != 'user':
+@app.route('/user_dashboard')
+def user_dashboard():
+    if "user_id" not in session or session.get("user_role") != "user":
         flash("Please login as a user to access this page.", "danger")
-        return redirect(url_for("login")) 
-    return render_template('user_dashboard.html')
+        return redirect(url_for("login"))
+    
+    subjects = Subject.query.all()
+    return render_template('user_dashboard.html', subjects=subjects)
 
 @app.route('/quiz')
 def quiz():

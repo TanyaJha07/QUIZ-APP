@@ -3,22 +3,30 @@
 {% block title %}Quizzy - Admin Dashboard{% endblock %}
 
 {% block content %}
-<!-- Custom CSS for a compact design with proper separation between subjects -->
+<!-- Custom CSS for compact design with forms in a single row -->
 <style>
-  /* Overall dashboard container */
   .dashboard-container {
       max-width: 90%;
       margin: auto;
       padding: 10px;
   }
   
-  /* Form container with compact style */
+  .forms-row {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 15px;
+      flex-wrap: nowrap;
+  }
+  
+  /* Each form will take roughly one-third of available width */
   .form-container {
       background: white;
       padding: 10px;
-      margin: 10px;
+      margin: 10px 0;
       border-radius: 8px;
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      flex: 1 1 30%;
   }
   
   .form-container input,
@@ -42,7 +50,7 @@
       box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
   }
   
-  /* Subjects and chapters container with a white background */
+  /* Subjects and chapters container remains unchanged */
   .subject-container {
       background-color: white;
       padding: 10px;
@@ -51,14 +59,12 @@
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
   
-  /* Subject item styling for proper separation */
   .subject-item {
       padding-bottom: 10px;
       margin-bottom: 10px;
       border-bottom: 1px solid #ccc;
   }
   
-  /* Remove bottom border for the last subject */
   .subject-item:last-child {
       border-bottom: none;
   }
@@ -68,9 +74,10 @@
   <h1 class="text-center fw-bold" style="color: #2c3e50;">Welcome to the Quiz App</h1>
   <p class="text-center" style="color: #7f8c8d;">Get ready to test your knowledge!</p>
   
-  <div style="display: flex; justify-content: center; gap: 15px; flex-wrap: wrap;">
+  <!-- Forms in one row -->
+  <div class="forms-row">
     <!-- Add Subject Form -->
-    <div class="form-container" style="width: 45%;">
+    <div class="form-container">
       <h3 style="text-align: center; color: #34495e; font-size: 18px;">Add Subject</h3>
       <form method="POST">
           <input type="hidden" name="action" value="add_subject">
@@ -83,9 +90,9 @@
           </div>
       </form>
     </div>
-  
+    
     <!-- Add Chapter Form -->
-    <div class="form-container" style="width: 45%;">
+    <div class="form-container">
       <h3 style="text-align: center; color: #34495e; font-size: 18px;">Add Chapter</h3>
       <form method="POST">
           <input type="hidden" name="action" value="add_chapter">
@@ -105,39 +112,39 @@
           </div>
       </form>
     </div>
+    
+    <!-- Add Question Form -->
+    <div class="form-container">
+      <h3 style="text-align: center; color: #34495e; font-size: 18px;">Add Question</h3>
+      <form method="POST">
+          <input type="hidden" name="action" value="add_question">
+          <label style="font-weight: bold; display: block; margin-bottom: 3px; font-size: 14px;">Question Statement</label>
+          <input type="text" name="question_statement" required>
+          <label style="font-weight: bold; display: block; margin-bottom: 3px; font-size: 14px;">Option 1</label>
+          <input type="text" name="option1" required>
+          <label style="font-weight: bold; display: block; margin-bottom: 3px; font-size: 14px;">Option 2</label>
+          <input type="text" name="option2" required>
+          <label style="font-weight: bold; display: block; margin-bottom: 3px; font-size: 14px;">Option 3</label>
+          <input type="text" name="option3" required>
+          <label style="font-weight: bold; display: block; margin-bottom: 3px; font-size: 14px;">Option 4</label>
+          <input type="text" name="option4" required>
+          <label style="font-weight: bold; display: block; margin-bottom: 3px; font-size: 14px;">Correct Answer</label>
+          <input type="text" name="correct_answer" required>
+          <label style="font-weight: bold; display: block; margin-bottom: 3px; font-size: 14px;">Select Chapter</label>
+          <select name="chapter_id" required>
+              <option value="">-- Select Chapter --</option>
+              {% for chapter in chapters %}
+              <option value="{{ chapter.id }}">{{ chapter.chapter_name }}</option>
+              {% endfor %}
+          </select>
+          <div style="text-align: center; margin-top: 10px;">
+              <button type="submit">➕ Add Question</button>
+          </div>
+      </form>
+    </div>
   </div>
   
-  <!-- Add Question Form -->
-  <div class="form-container" style="width: 45%; margin: 20px auto;">
-    <h3 style="text-align: center; color: #34495e; font-size: 18px;">Add Question</h3>
-    <form method="POST">
-        <input type="hidden" name="action" value="add_question">
-        <label style="font-weight: bold; display: block; margin-bottom: 3px; font-size: 14px;">Question Statement</label>
-        <input type="text" name="question_statement" required>
-        <label style="font-weight: bold; display: block; margin-bottom: 3px; font-size: 14px;">Option 1</label>
-        <input type="text" name="option1" required>
-        <label style="font-weight: bold; display: block; margin-bottom: 3px; font-size: 14px;">Option 2</label>
-        <input type="text" name="option2" required>
-        <label style="font-weight: bold; display: block; margin-bottom: 3px; font-size: 14px;">Option 3</label>
-        <input type="text" name="option3" required>
-        <label style="font-weight: bold; display: block; margin-bottom: 3px; font-size: 14px;">Option 4</label>
-        <input type="text" name="option4" required>
-        <label style="font-weight: bold; display: block; margin-bottom: 3px; font-size: 14px;">Correct Answer</label>
-        <input type="text" name="correct_answer" required>
-        <label style="font-weight: bold; display: block; margin-bottom: 3px; font-size: 14px;">Select Chapter</label>
-        <select name="chapter_id" required>
-            <option value="">-- Select Chapter --</option>
-            {% for chapter in chapters %}
-            <option value="{{ chapter.id }}">{{ chapter.chapter_name }}</option>
-            {% endfor %}
-        </select>
-        <div style="text-align: center; margin-top: 10px;">
-            <button type="submit">➕ Add Question</button>
-        </div>
-    </form>
-  </div>
-  
-  <!-- Existing Subjects & Chapters with proper separation -->
+  <!-- Existing Subjects & Chapters -->
   <div class="subject-container">
     <h2 style="text-align: center; font-weight: bold; color: #2c3e50; font-size: 20px;">Existing Subjects & Chapters</h2>
     {% for subject in subjects %}
