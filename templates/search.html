@@ -3,56 +3,77 @@
 {% block title %}Search Results{% endblock %}
 
 {% block content %}
-<div class="container mt-4">
-    <h2 class="text-center">Search Results for "{{ query }}"</h2>
-    <hr>
-    <div>
-        <h3>Subjects</h3>
-        {% if subjects %}
-            <ul>
-                {% for subject in subjects %}
-                    <li style="margin-bottom: 15px;">
-                        <strong>{{ subject.subject_name }}</strong> - {{ subject.description }}<br>
+<div class="container mt-5">
+    <div class="text-center mb-4">
+        <h2 class="display-4">Search Results for "{{ query }}"</h2>
+        <hr class="w-25 mx-auto">
+    </div>
+    
+    {% if subjects %}
+    <div class="mb-5">
+        <h3 class="mb-3">Subjects</h3>
+        <div class="row">
+            {% for subject in subjects %}
+            <div class="col-md-6 mb-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h4 class="card-title">{{ subject.subject_name }}</h4>
+                        <p class="card-text">{{ subject.description }}</p>
                         {% set total_questions = 0 %}
                         {% for chapter in subject.chapters %}
                             {% set total_questions = total_questions + chapter.questions|length %}
                         {% endfor %}
-                        <em>Total Questions in Subject:</em> {{ total_questions }}<br>
-                        <a href="{{ url_for('edit_subject', subject_id=subject.id) }}">Edit Subject</a>
-                        <br>
-                        <strong>Chapters:</strong>
-                        <ul>
+                        <p><em>Total Questions in Subject: </em><strong>{{ total_questions }}</strong></p>
+                        <a href="{{ url_for('edit_subject', subject_id=subject.id) }}" class="btn btn-primary btn-sm">Edit Subject</a>
+                        {% if subject.chapters %}
+                        <hr>
+                        <h5>Chapters:</h5>
+                        <ul class="list-group list-group-flush">
                             {% for chapter in subject.chapters %}
-                                <li>
-                                    {{ chapter.chapter_name }} - {{ chapter.description }} 
+                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                <span>
+                                    {{ chapter.chapter_name }} - {{ chapter.description }}
                                     (<strong>{{ chapter.questions|length }} questions</strong>)
-                                    <a href="{{ url_for('edit_chapter', chapter_id=chapter.id) }}">Edit Chapter</a>
-                                </li>
+                                </span>
+                                <a href="{{ url_for('edit_chapter', chapter_id=chapter.id) }}" class="btn btn-outline-secondary btn-sm">Edit Chapter</a>
+                            </li>
                             {% endfor %}
                         </ul>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>No subjects found matching your query.</p>
-        {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
     </div>
-
+    {% else %}
+    <div class="mb-5">
+        <h3>Subjects</h3>
+        <p>No subjects found matching your query.</p>
+    </div>
+    {% endif %}
+    
+    {% if chapters %}
+    <div>
+        <h3 class="mb-3">Chapters</h3>
+        <ul class="list-group">
+            {% for chapter in chapters %}
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="mb-1">{{ chapter.chapter_name }}</h5>
+                    <p class="mb-1">{{ chapter.description }}</p>
+                    <small><strong>{{ chapter.questions|length }} questions</strong></small>
+                </div>
+                <a href="{{ url_for('edit_chapter', chapter_id=chapter.id) }}" class="btn btn-outline-secondary btn-sm">Edit Chapter</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% else %}
     <div>
         <h3>Chapters</h3>
-        {% if chapters %}
-            <ul>
-                {% for chapter in chapters %}
-                    <li style="margin-bottom: 10px;">
-                        <strong>{{ chapter.chapter_name }}</strong> - {{ chapter.description }} 
-                        (<strong>{{ chapter.questions|length }} questions</strong>)
-                        <a href="{{ url_for('edit_chapter', chapter_id=chapter.id) }}">Edit Chapter</a>
-                    </li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>No chapters found matching your query.</p>
-        {% endif %}
+        <p>No chapters found matching your query.</p>
     </div>
+    {% endif %}
 </div>
 {% endblock %}
