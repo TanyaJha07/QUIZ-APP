@@ -85,7 +85,7 @@ with app.app_context():
         db.session.add(admin)
         db.session.commit()
 
-#--------------------------------- Routes for User Authentication -----------------------------------------
+#---------------------------------  -----------------------------------------
 @app.route('/')
 def index():
     return render_template('index.html')
@@ -137,7 +137,7 @@ def login():
 
     return render_template('login.html')
 
-#--------------------------------- Routes for Admin Dashboard -----------------------------------------
+#--------------------------------- Admin Dashboard -----------------------------------------
 @app.route('/admin_dashboard', methods=['GET', 'POST'])
 def admin_dashboard():
     if "user_id" not in session or session['user_role'] != 'admin':
