@@ -69,6 +69,7 @@ with app.app_context():
 
     db.session.commit()
 
+    # Dummy data for admin user
     admin_email = "admin@example.com"
     admin_password = "admin"
 
@@ -83,7 +84,26 @@ with app.app_context():
             dob=datetime.strptime("2000-01-01", "%Y-%m-%d").date()
         )
         db.session.add(admin)
-        db.session.commit()
+
+    db.session.commit()
+
+    # Dummy data for regular user
+    user_email = "user@email.com"
+    user_password = "user"
+
+    user = User.query.filter_by(email=user_email).first()
+
+    if not user:
+        user = User(
+            username="user",
+            email=user_email,
+            password=user_password,
+            qualification="User",
+            dob=datetime.strptime("2000-01-01", "%Y-%m-%d").date()
+        )
+        db.session.add(user)
+
+    db.session.commit()
 
 #--------------------------------- Routes for User Authentication -----------------------------------------
 @app.route('/')
@@ -203,6 +223,17 @@ def admin_dashboard():
     quiz = Quiz.query.all()
 
     return render_template("admin_dashboard.html", subjects=subjects, chapters=chapters, quiz=quiz)
+
+#--------------------------------- Routes for User Dashboard -----------------------------------------
+@app.route('/user_dashboard')
+def user_dashboard():
+    if "user_id" not in session or session['user_role'] != 'user':
+        flash("Unauthorized access!", "danger")
+        return redirect(url_for("login"))
+
+    quiz = Quiz.query.order_by(Quiz.date_of_quiz).all()
+
+    return render_template('user_dashboard.html', quiz=quiz)
 
 #--------------------------------- Routes for Chapter Management -----------------------------------------
 @app.route('/chapter/new', methods=['GET', 'POST'])
@@ -347,6 +378,13 @@ def delete_quiz(quiz_id):
         flash("Quiz deleted successfully")
         return redirect(url_for('admin_dashboard'))
     return {"message": "Method not allowed"}, 405
+
+@app.route('/quiz/<int:quiz_id>', methods=['GET'])
+def start_quiz(quiz_id):
+    quiz = Quiz.query.get_or_404(quiz_id)  # Fetch the quiz by ID or return a 404 error
+    questions = Question.query.filter_by(chapter_id=quiz.chapter_id).all()  # Fetch questions related to the quiz
+
+    return render_template('start_quiz.html', quiz=quiz, questions=questions)
 
 #--------------------------------- Other Routes -----------------------------------------
 @app.route('/summary')

@@ -3,19 +3,20 @@
 {% block title %}Quizzy {% endblock %}
 
 {% block content %}
-    <h1>Welcome to the Quiz App</h1>
-    <p>Get ready to test your knowledge!</p>
+    <h1 class="text-center">Welcome to the Quiz App</h1>
+    <p class="text-center">Get ready to test your knowledge!</p>
 
-    <h2>Available quiz</h2>
-    <ul>
+    <h2 class="text-center">Available Quizzes</h2>
+    <ul class="list-group">
         {% for quiz in quiz %}
-            <li>
-                <h3>{{ quiz.title }}</h3>
-                <p>{{ quiz.description }}</p>
-                <a href="{% url 'start_quiz' quiz.id %}">Start Quiz</a>
-            </li>
-        {% empty %}
-            <li>No quiz available at the moment.</li>
+        <li class="list-group-item">
+            <strong>{{ quiz.title }}</strong>: {{ quiz.description }} | 
+            <strong>Date:</strong> {{ quiz.date_of_quiz }} | 
+            <strong>Remarks:</strong> {{ quiz.remarks }} | 
+            <a class="btn btn-primary btn-sm float-end" href="{{ url_for('start_quiz', quiz_id=quiz.id) }}">Start Quiz</a>
+        </li>
+        {% else %}
+            <li class="list-group-item">No quizzes available at the moment.</li>
         {% endfor %}
     </ul>
 {% endblock %}
