@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+
+{% block title %}Create Quiz{% endblock %}
+
+{% block content %}
+    <h1>Create a New Quiz</h1>
+    <form id="quizForm" method="POST" action="{{ url_for('create_quiz') }}">
+        <div>
+            <label for="chapter_name">Chapter Name:</label>
+            <select id="chapter_name" name="chapter_name" required>
+                <!-- Options will be populated here -->
+            </select>
+        </div>
+        <div>
+            <label for="date_of_quiz">Date of Quiz:</label>
+            <input type="date" id="date_of_quiz" name="date_of_quiz" required>
+        </div>
+        <div>
+            <label for="time_duration">Time Duration:</label>
+            <input type="number" id="duration_value" name="duration_value" required min="1">
+            <select id="duration_unit" name="duration_unit" required>
+                <option value="hours">hours</option>
+                <option value="minutes">minutes</option>
+            </select>
+        </div>
+        <div>
+            <label for="remarks">Remarks:</label>
+            <textarea id="remarks" name="remarks"></textarea>
+        </div>
+        <button type="submit">Create Quiz</button>
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/api/chapters') // This should be the endpoint that returns chapter data
+                .then(response => response.json())
+                .then(data => {
+                    const chapterSelect = document.getElementById('chapter_name');
+                    data.chapters.forEach(chapter => {
+                        const option = document.createElement('option');
+                        option.value = chapter.id; // Assuming each chapter has an 'id'
+                        option.textContent = chapter.name; // Assuming each chapter has a 'name'
+                        chapterSelect.appendChild(option);
+                    });
+                })
+                .catch(error => console.error('Error fetching chapters:', error));
+        });
+
+        document.getElementById('quizForm').onsubmit = function(event) {
+            event.preventDefault(); // Prevent default form submission
+            const formData = new FormData(this);
+            fetch(this.action, {
+                method: 'POST',
+                body: JSON.stringify({
+                    chapter_id: formData.get('chapter_name'), // Use chapter ID here
+                    date_of_quiz: formData.get('date_of_quiz'),
+                    time_duration: `${formData.get('duration_value')} ${formData.get('duration_unit')}`, // Combine value and unit
+                    remarks: formData.get('remarks')
+                }),
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    alert(data.message);
+                    window.location.href = "{{ url_for('admin_dashboard') }}"; // Redirect to admin dashboard
+                }
+            })
+            .catch(error => console.error('Error:', error));
+        };
+    </script>
+{% endblock %}
