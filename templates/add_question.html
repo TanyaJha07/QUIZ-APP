@@ -25,7 +25,7 @@
 
     <label>Select Quiz:</label>
     <select name="quiz_id" required>
-        {% for quiz in quizzes %}
+        {% for quiz in quiz %}
             <option value="{{ quiz.id }}">Quiz {{ quiz.id }}</option>
         {% endfor %}
     </select><br>

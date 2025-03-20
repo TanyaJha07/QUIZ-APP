@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}View Quiz{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center">Quiz Details</h1>
+    <div class="quiz-details">
+        <h2>Quiz Information</h2>
+        <ul>
+            <li><strong>Chapter ID:</strong> {{ quiz.chapter_id }}</li>
+            <li><strong>Date of Quiz:</strong> {{ quiz.date_of_quiz }}</li>
+            <li><strong>Time Duration:</strong> {{ quiz.time_duration }} minutes</li>
+            <li><strong>Remarks:</strong> {{ quiz.remarks }}</li>
+        </ul>
+    </div>
+
+    <h2>Questions</h2>
+    <div class="questions-list">
+        <ul>
+            {% for question in quiz.questions %}
+                <li>
+                    <strong>Question {{ loop.index }}:</strong> {{ question.question_statement }}<br>
+                    <strong>Options:</strong>
+                    <ul>
+                        <li>{{ question.option1 }}</li>
+                        <li>{{ question.option2 }}</li>
+                        <li>{{ question.option3 }}</li>
+                        <li>{{ question.option4 }}</li>
+                    </ul>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="text-center">
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-primary">Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

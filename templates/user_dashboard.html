@@ -3,6 +3,19 @@
 {% block title %}Quizzy {% endblock %}
 
 {% block content %}
-    <h1>Welcome to the Quiz App uuuuuuuuuuuuuuuuuuuuuuu</h1>
+    <h1>Welcome to the Quiz App</h1>
     <p>Get ready to test your knowledge!</p>
+
+    <h2>Available quiz</h2>
+    <ul>
+        {% for quiz in quiz %}
+            <li>
+                <h3>{{ quiz.title }}</h3>
+                <p>{{ quiz.description }}</p>
+                <a href="{% url 'start_quiz' quiz.id %}">Start Quiz</a>
+            </li>
+        {% empty %}
+            <li>No quiz available at the moment.</li>
+        {% endfor %}
+    </ul>
 {% endblock %}
