@@ -7,7 +7,7 @@
     <form id="quizForm" method="POST" action="{{ url_for('create_quiz') }}">
         <div>
             <label for="chapter_name">Chapter Name:</label>
-            <select id="chapter_name" name="chapter_name" required>
+            <select id="chapter_name" name="chapter_id" required>
                 <!-- Options will be populated here -->
             </select>
         </div>
@@ -45,14 +45,14 @@
                 })
                 .catch(error => console.error('Error fetching chapters:', error));
         });
-
+    
         document.getElementById('quizForm').onsubmit = function(event) {
             event.preventDefault(); // Prevent default form submission
             const formData = new FormData(this);
             fetch(this.action, {
                 method: 'POST',
                 body: JSON.stringify({
-                    chapter_id: formData.get('chapter_name'), // Use chapter ID here
+                    chapter_id: formData.get('chapter_id'), // Use chapter ID here
                     date_of_quiz: formData.get('date_of_quiz'),
                     time_duration: `${formData.get('duration_value')} ${formData.get('duration_unit')}`, // Combine value and unit
                     remarks: formData.get('remarks')

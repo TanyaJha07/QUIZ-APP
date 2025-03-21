@@ -6,7 +6,7 @@
 <!-- Updated Custom CSS for a Modern, Compact Design with Side-by-Side Forms -->
 <style>
   .dashboard-container {
-    max-width: 90%;
+    max-width: 100%;
     margin: auto;
     padding: 20px;
     background-color: #f8f9fa;
@@ -84,22 +84,20 @@
   <div class="forms-row">
     <!-- Add Subject Form -->
     <div class="form-container">
-      <h3 style="text-align: center; color: #34495e;">Add Subject</h3>
+      <h3 class="text-center">Add Subject</h3>
       <form method="POST">
         <input type="hidden" name="action" value="add_subject">
         <label>Subject Name</label>
         <input type="text" name="subject_name" required>
         <label>Description</label>
         <input type="text" name="subject_description">
-        <div style="text-align: center;">
-          <button type="submit">➕ Add Subject</button>
-        </div>
+        <button type="submit">➕ Add Subject</button>
       </form>
     </div>
 
     <!-- Add Chapter Form -->
     <div class="form-container">
-      <h3 style="text-align: center; color: #34495e;">Add Chapter</h3>
+      <h3 class="text-center">Add Chapter</h3>
       <form method="POST">
         <input type="hidden" name="action" value="add_chapter">
         <label>Chapter Name</label>
@@ -113,27 +111,22 @@
           <option value="{{ subject.id }}">{{ subject.subject_name }}</option>
           {% endfor %}
         </select>
-        <div style="text-align: center;">
-          <button type="submit">📖 Add Chapter</button>
-        </div>
+        <button type="submit">📖 Add Chapter</button>
       </form>
     </div>
 
     <!-- Add Question Form -->
     <div class="form-container">
-      <h3 style="text-align: center; color: #34495e;">Add Question</h3>
+      <h3 class="text-center">Add Question</h3>
       <form method="POST">
         <input type="hidden" name="action" value="add_question">
         <label>Question Statement</label>
         <input type="text" name="question_statement" required>
-        <label>Option 1</label>
-        <input type="text" name="option1" required>
-        <label>Option 2</label>
-        <input type="text" name="option2" required>
-        <label>Option 3</label>
-        <input type="text" name="option3" required>
-        <label>Option 4</label>
-        <input type="text" name="option4" required>
+        <label>Options</label>
+        <input type="text" name="option1" placeholder="Option 1" required>
+        <input type="text" name="option2" placeholder="Option 2" required>
+        <input type="text" name="option3" placeholder="Option 3" required>
+        <input type="text" name="option4" placeholder="Option 4" required>
         <label>Correct Answer</label>
         <input type="text" name="correct_answer" required>
         <label>Select Chapter</label>
@@ -143,67 +136,60 @@
           <option value="{{ chapter.id }}">{{ chapter.chapter_name }}</option>
           {% endfor %}
         </select>
-        <div style="text-align: center;">
-          <button type="submit">➕ Add Question</button>
-        </div>
+        <button type="submit">➕ Add Question</button>
       </form>
     </div>
   </div>
 
   <!-- Existing Subjects & Chapters -->
   <div class="subject-container">
-    <h2 style="text-align: center; font-weight: bold;">Existing Subjects & Chapters</h2>
+    <h2 class="text-center">Existing Subjects & Chapters</h2>
     {% for subject in subjects %}
     <div class="subject-item">
-      <h3 style="color: #34495e; text-align: center; font-weight: bold;">{{ subject.subject_name }}</h3>
-      <p style="text-align: center; color: #7f8c8d;">{{ subject.description }}</p>
-      <div style="text-align: center;">
-        <a href="{{ url_for('edit_subject', subject_id=subject.id) }}" style="background: #ffc107; color: white; padding: 4px 10px; border-radius: 15px; text-decoration: none;">✏️ Edit</a>
+      <h3 class="text-center">{{ subject.subject_name }}</h3>
+      <p class="text-center text-muted">{{ subject.description }}</p>
+      <div class="text-center">
+        <a href="{{ url_for('edit_subject', subject_id=subject.id) }}" class="btn btn-warning">✏️ Edit</a>
         <form method="POST" action="{{ url_for('delete_subject', subject_id=subject.id) }}" style="display: inline;">
-          <button type="submit" onclick="return confirm('Are you sure you want to delete this chapter?');" style="background: #dc3545; color: white; padding: 2px 6px; border-radius: 10px; border: none; cursor: pointer;">🗑️</button>
+          <button type="submit" class="btn btn-danger" onclick="return confirm('Delete this subject?');">🗑️</button>
         </form>
       </div>
-      <div style="padding-left: 15px;">
+      <div>
         {% for chapter in subject.chapters %}
-        <p style="font-size: 12px; margin-bottom: 5px;">
-          <strong>{{ chapter.chapter_name }}</strong> - {{ chapter.description }} (<span>{{ chapter.questions|length }} questions</span>)
-          <a href="{{ url_for('edit_chapter', chapter_id=chapter.id) }}" style="font-size: 11px;">✏️ Edit</a>
-        </p>
+        <p><strong>{{ chapter.chapter_name }}</strong> - {{ chapter.description }} ({{ chapter.questions|length }} questions)</p>
         {% endfor %}
       </div>
     </div>
     {% else %}
-    <p style="text-align: center; color: #6c757d;">No subjects available. Add a new subject to get started.</p>
+    <p class="text-center text-muted">No subjects available.</p>
     {% endfor %}
   </div>
 
-  <!-- Created quiz Section -->
+  <!-- Created Quizzes -->
   <div class="quiz-container">
-    <h2 style="text-align: center; font-weight: bold;">Created quiz</h2>
-    {% if quiz %}
+    <h2 class="text-center">Created Quizzes</h2>
+    {% if quizzes %}
     <ul>
-      {% for quiz in quiz %}
+      {% for quiz in quizzes %}
       <li>
-        <strong>Chapter ID:</strong> {{ quiz.chapter_id }} |
-        <strong>Date of Quiz:</strong> {{ quiz.date_of_quiz }} |
-        <strong>Time Duration:</strong> {{ quiz.time_duration }} minutes |
-        <strong>Remarks:</strong> {{ quiz.remarks }} |
-        <a href="{{ url_for('view_quiz', quiz_id=quiz.id) }}" class="btn btn-info" style="padding: 5px 10px; border-radius: 5px; text-decoration: none; color: white; background-color: #007bff;">View</a>
+        <strong>Chapter:</strong> {{ quiz.chapter_id }} | 
+        <strong>Date:</strong> {{ quiz.date_of_quiz }} | 
+        <strong>Duration:</strong> {{ quiz.time_duration }} mins | 
+        <strong>Remarks:</strong> {{ quiz.remarks }}
+        <a href="{{ url_for('view_quiz', quiz_id=quiz.id) }}" class="btn btn-info">View</a>
         <form method="POST" action="{{ url_for('delete_quiz', quiz_id=quiz.id) }}" style="display: inline;">
-          <input type="hidden" name="_method" value="DELETE">
-          <button type="submit" onclick="return confirm('Are you sure you want to delete this quiz?');" class="btn btn-danger" style="padding: 5px 10px; border-radius: 5px; text-decoration: none; color: white; background-color: #dc3545;">Delete</button>
+          <button type="submit" class="btn btn-danger" onclick="return confirm('Delete this quiz?');">Delete</button>
         </form>
       </li>
       {% endfor %}
     </ul>
     {% else %}
-    <p style="text-align: center; color: #6c757d;">No quiz available. Create a new quiz to get started.</p>
+    <p class="text-center text-muted">No quizzes available.</p>
+    <div class="text-center">
+      <a href="{{ url_for('create_quiz') }}" class="btn btn-primary">📚 Create Quiz</a>
+    </div>
     {% endif %}
-  </div>
 
-  <!-- Create Quiz Button -->
-  <div style="text-align: center; margin-bottom: 20px;">
-    <a href="{{ url_for('get_quiz') }}" style="background: #007bff; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; font-size: 16px;">📚 Create Quiz</a>
   </div>
 </div>
 {% endblock %}
