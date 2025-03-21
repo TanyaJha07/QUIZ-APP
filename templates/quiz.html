@@ -3,39 +3,107 @@
 {% block title %}Create Quiz{% endblock %}
 
 {% block content %}
-    <h1>Create a New Quiz</h1>
-    <form id="quizForm" method="POST" action="{{ url_for('create_quiz') }}">
-        <div>
-            <label for="quiz_name">Quiz Name:</label>
-            <input type="text" id="quiz_name" name="quiz_name" required>
-        </div>
-        <div>
-            <label for="chapter_name">Chapter Name:</label>
-            <select id="chapter_name" name="chapter_id" required>
-                <!-- Options will be populated here -->
-                {% for chapter in chapters %}
-                <option value="{{ chapter.id }}">{{ chapter.chapter_name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-        <div>
-            <label for="date_of_quiz">Date of Quiz:</label>
-            <input type="date" id="date_of_quiz" name="date_of_quiz" required>
-        </div>
-        <div>
-            <label for="time_duration">Time Duration:</label>
-            <input type="number" id="duration_value" name="duration_value" required min="1">
-            <select id="duration_unit" name="duration_unit" required>
-                <option value="hours">hours</option>
-                <option value="minutes">minutes</option>
-            </select>
-        </div>
-        <div>
-            <label for="remarks">Remarks:</label>
-            <textarea id="remarks" name="remarks"></textarea>
-        </div>
-        <button type="submit">Create Quiz</button>
-    </form>
+    <div id="quiz-container">
+        <style>
+            /* Styles scoped to quiz container only */
+            #quiz-container {
+                max-width: 600px;
+                margin: 2rem auto;
+                background: #fff;
+                border-radius: 8px;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                padding: 1.5rem;
+            }
+            
+            #quiz-container h1 {
+                text-align: center;
+                color: #333;
+                margin-top: 1rem;
+            }
+
+            /* Spacing for each form field */
+            #quiz-container form div {
+                margin-bottom: 1rem;
+            }
+
+            /* Label styling */
+            #quiz-container label {
+                display: block;
+                margin-bottom: 0.5rem;
+                font-weight: bold;
+            }
+
+            /* Input, select, and textarea styling */
+            #quiz-container input[type="text"],
+            #quiz-container input[type="date"],
+            #quiz-container input[type="number"],
+            #quiz-container select,
+            #quiz-container textarea {
+                width: 100%;
+                padding: 0.5rem;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+                box-sizing: border-box;
+            }
+
+            /* Textarea specific styling */
+            #quiz-container textarea {
+                resize: vertical;
+                height: 100px;
+            }
+
+            /* Button styling */
+            #quiz-container button[type="submit"] {
+                display: block;
+                width: 100%;
+                padding: 0.75rem;
+                background-color: #007BFF;
+                color: #fff;
+                border: none;
+                border-radius: 4px;
+                cursor: pointer;
+                font-size: 1rem;
+            }
+            
+            #quiz-container button[type="submit"]:hover {
+                background-color: #0056b3;
+            }
+        </style>
+
+        <h1>Create a New Quiz</h1>
+        <form id="quizForm" method="POST" action="{{ url_for('create_quiz') }}">
+            <div>
+                <label for="quiz_name">Quiz Name:</label>
+                <input type="text" id="quiz_name" name="quiz_name" required>
+            </div>
+            <div>
+                <label for="chapter_name">Chapter Name:</label>
+                <select id="chapter_name" name="chapter_id" required>
+                    <!-- Options will be populated here -->
+                    {% for chapter in chapters %}
+                    <option value="{{ chapter.id }}">{{ chapter.chapter_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div>
+                <label for="date_of_quiz">Date of Quiz:</label>
+                <input type="date" id="date_of_quiz" name="date_of_quiz" required>
+            </div>
+            <div>
+                <label for="time_duration">Time Duration:</label>
+                <input type="number" id="duration_value" name="duration_value" required min="1">
+                <select id="duration_unit" name="duration_unit" required>
+                    <option value="hours">hours</option>
+                    <option value="minutes">minutes</option>
+                </select>
+            </div>
+            <div>
+                <label for="remarks">Remarks:</label>
+                <textarea id="remarks" name="remarks"></textarea>
+            </div>
+            <button type="submit">Create Quiz</button>
+        </form>
+    </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

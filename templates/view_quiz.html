@@ -3,6 +3,90 @@
 {% block title %}View Quiz{% endblock %}
 
 {% block content %}
+<style>
+    /* Container for the entire view quiz content */
+    .container {
+        max-width: 800px;
+        margin: 2rem auto;
+        background: #fff;
+        border-radius: 8px;
+        padding: 1.5rem 2rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        text-align: left;
+    }
+
+    /* Headings styling remains compact and clear */
+    .container h1,
+    .container h2 {
+        color: #333;
+        margin-bottom: 1rem;
+    }
+
+    .quiz-details {
+        background-color: #f5f5f5;
+        padding: 0.75rem 1rem;
+        border-radius: 6px;
+        margin-bottom: 1.5rem;
+    }
+
+    .quiz-details ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .quiz-details li {
+        padding: 0.3rem 0;
+        border-bottom: 1px solid #ddd;
+        font-size: 0.95rem;
+    }
+
+    .quiz-details li:last-child {
+        border-bottom: none;
+    }
+
+    /* Compact Questions List Styling */
+    .questions-list ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .questions-list li {
+        background: #f9f9f9;
+        margin-bottom: 0.5rem;
+        padding: 0.5rem 0.75rem;
+        border-radius: 6px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        font-size: 0.9rem;
+    }
+
+    .questions-list li ul {
+        list-style: disc;
+        padding-left: 1.25rem;
+        margin: 0.5rem 0 0 0;
+    }
+
+    /* Centered button styling remains unchanged */
+    .text-center {
+        text-align: center;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 0.75rem 1.5rem;
+        background-color: #007BFF;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 4px;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+    }
+</style>
+
 <div class="container">
     <h1 class="text-center">Quiz Details</h1>
     <div class="quiz-details">
