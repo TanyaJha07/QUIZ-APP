@@ -55,25 +55,36 @@
     transition: background 0.3s;
   }
   .form-container button:hover { background: #0056b3; }
+  
+  /* Updated Subject & Chapter Container */
   .subject-container,
   .quiz-container {
     background-color: #fff;
-    padding: 20px;
-    margin: 20px 0;
+    padding: 12px 15px; /* Reduced padding for a compact look */
+    margin: 15px 0;     /* Reduced margin */
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
+  
   .subject-item {
-    padding: 10px 0;
+    padding: 8px 0;     /* Reduced padding for each subject item */
     border-bottom: 1px solid #ccc;
+    font-size: 14px;    /* Slightly smaller font size */
   }
   .subject-item:last-child { border-bottom: none; }
-  .quiz-container ul { list-style-type: none; padding: 0; }
+  
+  .quiz-container ul { list-style-type: none; padding: 0; margin: 0; }
   .quiz-container li {
-    padding: 10px;
+    padding: 8px 10px;   /* Reduced padding for a compact list */
     border-bottom: 1px solid #e9ecef;
+    font-size: 14px;
   }
   .quiz-container li:last-child { border-bottom: none; }
+  
+  /* Additional tweaks for text-center elements */
+  .text-center {
+    text-align: center;
+  }
 </style>
 
 <div class="dashboard-container">
@@ -195,7 +206,6 @@
     {% else %}
     <p class="text-center text-muted">No quizzes available.</p>
     {% endif %}
-
   </div>
 </div>
 {% endblock %}
