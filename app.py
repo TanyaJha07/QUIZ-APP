@@ -502,9 +502,10 @@ def submit_quiz(quiz_id):
     quiz = Quiz.query.get_or_404(quiz_id)
     score = 0
     total_questions = 0
+    questions = Question.query.filter_by(chapter_id=quiz.chapter_id).all()
 
     # Iterate over the questions and check answers
-    for question in quiz.questions:
+    for question in questions:
         total_questions += 1
         user_answer = request.form.get(f'question_{question.id}')
         if user_answer == question.correct_answer:
