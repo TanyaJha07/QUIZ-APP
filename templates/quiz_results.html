@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block title %}Quiz Results{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center">Quiz Results for: {{ quiz.name }}</h1>
+    <h2>Your Score: {{ score }} out of {{ total_questions }} ({{ score_percentage }}%)</h2>
+    <div class="text-center">
+        <a href="{{ url_for('user_dashboard') }}" class="btn btn-primary">Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block title %}Take Quiz{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1 class="text-center">Take Quiz: {{ quiz.name }}</h1>
+    <form method="POST" action="{{ url_for('submit_quiz', quiz_id=quiz.id) }}">
+        <div class="quiz-questions">
+            {% for question in questions %}
+                <div class="question">
+                    <h4>Question {{ loop.index }}: {{ question.question_statement }}</h4>
+                    <div>
+                        <input type="radio" name="question_{{ question.id }}" value="{{ question.option1 }}" required> {{ question.option1 }}<br>
+                        <input type="radio" name="question_{{ question.id }}" value="{{ question.option2 }}"> {{ question.option2 }}<br>
+                        <input type="radio" name="question_{{ question.id }}" value="{{ question.option3 }}"> {{ question.option3 }}<br>
+                        <input type="radio" name="question_{{ question.id }}" value="{{ question.option4 }}"> {{ question.option4 }}<br>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-primary">Submit Quiz</button>
+    </form>
+</div>
+{% endblock %}

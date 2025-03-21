@@ -10,10 +10,12 @@
     <ul class="list-group">
         {% for quiz in quiz %}
         <li class="list-group-item">
-            <strong>{{ quiz.title }}</strong>: {{ quiz.description }} | 
+            <strong>Chapter:</strong> {{ quiz.chapter_id }} | 
+            <strong>{{ quiz.name }}</strong> | 
             <strong>Date:</strong> {{ quiz.date_of_quiz }} | 
+            <strong>Duration:</strong> {{ quiz.time_duration }} mins | 
             <strong>Remarks:</strong> {{ quiz.remarks }} | 
-            <a class="btn btn-primary btn-sm float-end" href="{{ url_for('start_quiz', quiz_id=quiz.id) }}">Start Quiz</a>
+            <a class="btn btn-primary btn-sm float-end" href="{{ url_for('take_quiz', quiz_id=quiz.id) }}">Start Quiz</a>
         </li>
         {% else %}
             <li class="list-group-item">No quizzes available at the moment.</li>

@@ -436,23 +436,29 @@ def create_quiz():
 
     return render_template('quiz.html')
 
-@app.route('/quiz/<int:quiz_id>', methods=['PUT'])
-def edit_quiz(quiz_id):
-    if "user_id" not in session or session['user_role'] != 'admin':
-        return jsonify({"error": "Unauthorized access"}), 403
-
+@app.route('/take_quiz/<int:quiz_id>', methods=['GET'])
+def take_quiz(quiz_id):
     quiz = Quiz.query.get_or_404(quiz_id)
-    data = request.json
+    questions = Question.query.filter_by(chapter_id=quiz.chapter_id).all()
+    return render_template('take_quiz.html', quiz=quiz, questions=questions)
 
-    if "chapter_id" in data:
-        quiz.chapter_id = data["chapter_id"]
-    if "time_duration" in data:
-        quiz.time_duration = data["time_duration"]
-    if "remarks" in data:
-        quiz.remarks = data["remarks"]
+@app.route('/submit_quiz/<int:quiz_id>', methods=['POST'])
+def submit_quiz(quiz_id):
+    quiz = Quiz.query.get_or_404(quiz_id)
+    score = 0
+    total_questions = 0
 
-    db.session.commit()
-    return jsonify({"message": "Quiz updated successfully"}), 200
+    # Iterate over the questions and check answers
+    for question in quiz.questions:
+        total_questions += 1
+        user_answer = request.form.get(f'question_{question.id}')
+        if user_answer == question.correct_answer:
+            score += 1
+
+    # Calculate the score percentage
+    score_percentage = (score / total_questions) * 100 if total_questions > 0 else 0
+
+    return render_template('quiz_results.html', quiz=quiz, score=score, total_questions=total_questions, score_percentage=score_percentage)
 
 @app.route('/quiz/<int:quiz_id>', methods=['POST'])
 def delete_quiz(quiz_id):
