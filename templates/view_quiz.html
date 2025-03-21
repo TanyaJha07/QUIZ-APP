@@ -8,7 +8,6 @@
     <div class="quiz-details">
         <h2>Quiz Information</h2>
         <ul>
-            <li><strong>Chapter ID:</strong> {{ quiz.chapter_id }}</li>
             <li><strong>Quiz Name:</strong> {{ quiz.name }}</li>
             <li><strong>Date of Quiz:</strong> {{ quiz.date_of_quiz }}</li>
             <li><strong>Time Duration:</strong> {{ quiz.time_duration }} minutes</li>
@@ -19,7 +18,7 @@
     <h2>Questions</h2>
     <div class="questions-list">
         <ul>
-            {% for question in quiz.questions %}
+            {% for question in questions %}
                 <li>
                     <strong>Question {{ loop.index }}:</strong> {{ question.question_statement }}<br>
                     <strong>Options:</strong>

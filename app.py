@@ -364,6 +364,19 @@ def get_quiz():
     quizzes = Quiz.query.all()
     return jsonify(quizzes=[quiz.serialize() for quiz in quizzes])
 
+
+@app.route('/quiz/<int:quiz_id>', methods=['GET'])
+def view_quiz(quiz_id):
+    quiz = Quiz.query.filter_by(id=quiz_id).first()
+    
+    if not quiz:
+        return "Quiz not found", 404
+    
+    # Fetch questions based on chapter_id from the quiz
+    questions = Question.query.filter_by(chapter_id=quiz.chapter_id).all()
+    print(questions)
+    return render_template('view_quiz.html', quiz=quiz, questions=questions)
+
 @app.route('/create_quiz', methods=['POST', 'GET'])
 def create_quiz():
     if "user_id" not in session or session['user_role'] != 'admin':
@@ -425,11 +438,6 @@ def create_quiz():
 
     return render_template('quiz.html')
 
-@app.route('/quiz/<int:quiz_id>', methods=['GET'])
-def view_quiz(quiz_id):
-    quiz = Quiz.query.options(joinedload(Quiz.questions)).get_or_404(quiz_id)
-    return jsonify(quiz=quiz.serialize())
-
 @app.route('/quiz/<int:quiz_id>', methods=['PUT'])
 def edit_quiz(quiz_id):
     if "user_id" not in session or session['user_role'] != 'admin':
@@ -462,12 +470,6 @@ def delete_quiz(quiz_id):
         return redirect(url_for('admin_dashboard'))  # Redirect back to admin dashboard
 
     return jsonify({"error": "Method not allowed"}), 405
-
-@app.route('/quiz/<int:quiz_id>/start', methods=['GET'])
-def start_quiz(quiz_id):
-    quiz = Quiz.query.get_or_404(quiz_id)
-    questions = Question.query.filter_by(chapter_id=quiz.chapter_id).all()
-    return jsonify(quiz=quiz.serialize(), questions=[q.serialize() for q in questions])
 
 #--------------------------------- Routes for Question Management -----------------------------------------
 @app.route('/add_question', methods=['POST'])

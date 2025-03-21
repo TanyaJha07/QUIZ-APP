@@ -102,6 +102,16 @@ class Question(db.Model):
     # Define relationship with chapter
     chapter = db.relationship("Chapter", back_populates="questions")
 
+    # Serialization method
+    def serialize(self):
+        return {
+            'id': self.id,
+            'question_statement': self.question_statement,
+            'options': [self.option1, self.option2, self.option3, self.option4],
+            'correct_answer': self.correct_answer,
+            'chapter_id': self.chapter_id
+        }
+
 
 # Score Model
 class Score(db.Model):
