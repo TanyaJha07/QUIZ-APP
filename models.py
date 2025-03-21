@@ -34,10 +34,10 @@ class Subject(db.Model):
     subject_name = db.Column(db.String(80), unique=True, nullable=False)
     description = db.Column(db.String(255), nullable=True)
 
-    # Relationship
-    chapters = db.relationship('Chapter', backref='subject', lazy=True)
+    # Relationship with cascade delete
+    chapters = db.relationship('Chapter', backref='subject', cascade="all, delete-orphan", lazy=True)
 
-
+# Chapter Model
 # Chapter Model
 class Chapter(db.Model):
     __tablename__ = 'chapters'
@@ -47,11 +47,10 @@ class Chapter(db.Model):
     description = db.Column(db.String(255), nullable=True)
     subject_id = db.Column(db.Integer, db.ForeignKey('subjects.id'), nullable=False)
 
-    # Relationship
-    quizzes = db.relationship('Quiz', back_populates='chapter', lazy=True)
-    questions = db.relationship('Question', back_populates='chapter', lazy=True)
+    # Update the relationships:
+    quizzes = db.relationship('Quiz', back_populates='chapter', cascade="all, delete-orphan", lazy=True)
+    questions = db.relationship('Question', back_populates='chapter', cascade="all, delete-orphan", lazy=True)
 
-    # Serialization
     def serialize(self):
         return {
             'id': self.id,
