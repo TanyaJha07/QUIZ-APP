@@ -241,9 +241,8 @@ def admin_dashboard():
 
     subjects = Subject.query.all()
     chapters = Chapter.query.all()
-    quiz = Quiz.query.all()
-
-    return render_template("admin_dashboard.html", subjects=subjects, chapters=chapters, quiz=quiz)
+    quizzes = Quiz.query.all()
+    return render_template("admin_dashboard.html", subjects=subjects, chapters=chapters, quizzes=quizzes)
 
 #--------------------------------- Routes for User Dashboard -----------------------------------------
 from functools import wraps
