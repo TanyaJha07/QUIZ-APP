@@ -504,6 +504,10 @@ def submit_quiz(quiz_id):
     total_questions = 0
     questions = Question.query.filter_by(chapter_id=quiz.chapter_id).all()
 
+    # Get the start time from the form
+    start_time = request.form.get('start_time')  # Assuming this is passed as a hidden input
+    start_time = datetime.fromisoformat(start_time) if start_time else datetime.now()
+
     # Iterate over the questions and check answers
     for question in questions:
         total_questions += 1
@@ -513,6 +517,19 @@ def submit_quiz(quiz_id):
 
     # Calculate the score percentage
     score_percentage = (score / total_questions) * 100 if total_questions > 0 else 0
+
+    end_time = datetime.now()
+    time_taken = (end_time - start_time).total_seconds()
+
+    user_id = session.get('user_id')
+    new_score = Score(
+        user_id=user_id, 
+        quiz_id=quiz_id, 
+        total_scored=score, 
+        time_stamp_of_attempt=start_time
+        )
+    db.session.add(new_score)
+    db.session.commit()
 
     return render_template('quiz_results.html', quiz=quiz, score=score, total_questions=total_questions, score_percentage=score_percentage)
 

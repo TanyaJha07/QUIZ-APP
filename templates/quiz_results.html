@@ -3,10 +3,32 @@
 {% block title %}Quiz Results{% endblock %}
 
 {% block content %}
-<div class="container">
+<div class="container mt-5">
     <h1 class="text-center">Quiz Results for: {{ quiz.name }}</h1>
-    <h2>Your Score: {{ score }} out of {{ total_questions }} ({{ score_percentage }}%)</h2>
+    <h2>Your Score: {{ score }} out of {{ total_questions }} ({{ '%.2f' | format(score_percentage) }}%)</h2>
+
     <div class="text-center">
+        {% if score_percentage >= 75 %}
+            <p class="text-success">Great job! You passed the quiz!</p>
+        {% elif score_percentage >= 50 %}
+            <p class="text-warning">Good effort! You can improve with more practice.</p>
+        {% else %}
+            <p class="text-danger">Don't be discouraged! Review the material and try again.</p>
+        {% endif %}
+    </div>
+
+    <h3 class="mt-4">Your Answers:</h3>
+    <div class="list-group">
+        {% for question in questions %}
+            <div class="list-group-item">
+                <h5>Question {{ loop.index }}: {{ question.question_statement }}</h5>
+                <p>Your Answer: {{ user_answers[loop.index0] }}</p>
+                <p>Correct Answer: {{ question.correct_answer }}</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    <div class="text-center mt-4">
         <a href="{{ url_for('user_dashboard') }}" class="btn btn-primary">Back to Dashboard</a>
     </div>
 </div>
