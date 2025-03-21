@@ -409,7 +409,7 @@ def create_quiz():
 
     return render_template('quiz.html')
 
-
+#--------------------------------- Routes for Quiz Management -----------------------------------------
 @app.route('/quiz/<int:quiz_id>', methods=['GET'])
 def view_quiz(quiz_id):
     quiz = Quiz.query.options(joinedload(Quiz.questions)).get_or_404(quiz_id)
