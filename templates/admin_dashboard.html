@@ -3,39 +3,43 @@
 {% block title %}Quizzy - Admin Dashboard{% endblock %}
 
 {% block content %}
-<!-- Updated Custom CSS for a Modern, Compact Design with Side-by-Side Forms -->
+<!-- Updated Compact CSS for Admin Dashboard with Chapter Edit/Delete Buttons Side by Side -->
 <style>
   .dashboard-container {
     max-width: 100%;
     margin: auto;
-    padding: 20px;
+    padding: 10px;
     background-color: #f8f9fa;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
-  h1, h2 { color: #2c3e50; }
+  h1, h2 {
+    color: #2c3e50;
+    margin: 0 0 10px;
+  }
   .forms-row {
     display: flex;
-    gap: 20px;
+    gap: 10px;
     justify-content: space-between;
-    flex-wrap: nowrap; /* Force forms to remain side by side */
+    flex-wrap: nowrap;
+    margin-bottom: 15px;
   }
   .form-container {
     background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     width: 32%;
     box-sizing: border-box;
   }
   .form-container input,
   .form-container select {
     width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    font-size: 14px;
+    padding: 6px;
+    margin-bottom: 10px;
+    font-size: 13px;
     border: 1px solid #ccc;
-    border-radius: 6px;
+    border-radius: 4px;
     transition: border-color 0.3s;
   }
   .form-container input:focus,
@@ -44,67 +48,141 @@
     outline: none;
   }
   .form-container button {
-    padding: 10px 15px;
-    font-size: 14px;
-    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 13px;
+    border-radius: 4px;
     border: none;
     cursor: pointer;
     background: #007bff;
     color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
     transition: background 0.3s;
   }
-  .form-container button:hover { background: #0056b3; }
-  
-  /* Updated styling for Existing Subjects & Chapters */
+  .form-container button:hover {
+    background: #0056b3;
+  }
+
+  /* Compact styling for Existing Subjects & Chapters */
   .subject-container {
     display: flex;
     flex-wrap: wrap;
-    gap: 20px;
+    gap: 10px;
     justify-content: center;
-    margin: 15px 0;
-    padding: 15px;
+    margin: 10px 0;
+    padding: 10px;
   }
   .subject-container h2 {
     width: 100%;
     text-align: center;
-    margin-bottom: 20px;
-    color: #2c3e50;
+    margin-bottom: 10px;
   }
   .subject-item {
     background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    padding: 15px;
-    width: 300px;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    width: 280px;
     text-align: center;
   }
   .subject-item h3 {
-    margin-bottom: 10px;
-    color: #2c3e50;
+    margin-bottom: 6px;
+    font-size: 16px;
   }
   .subject-item p {
-    font-size: 14px;
-    margin-bottom: 8px;
+    font-size: 13px;
+    margin-bottom: 6px;
   }
-  
-  /* Existing Quizzes styling remains unchanged */
+  /* Refined Subject Action Buttons */
+  .subject-item .btn {
+    display: inline-block;
+    padding: 6px 12px;
+    font-size: 13px;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    margin: 2px;
+  }
+  /* Change EDIT button to nav-bar blue (#3a3d98) */
+  .subject-item .btn-warning,
+  .chapter-item .btn-warning {
+    background-color:#007bff;/* Change EDIT button to nav-bar blue (#3a3d98) */;
+    color: #fff;
+    transition: background-color 0.3s ease;
+  }
+  .subject-item .btn-warning:hover,
+  .chapter-item .btn-warning:hover {
+    background-color: #007bff;
+  }
+  .subject-item .btn-danger {
+    background-color: #e74c3c;
+    color: #fff;
+    transition: background-color 0.3s ease;
+  }
+  .subject-item .btn-danger:hover {
+    background-color: #c0392b;
+  }
+
+  /* Styling for Chapter Edit/Delete Buttons */
+  .chapter-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: none;
+    border-radius: 4px;
+    padding: 6px 8px;
+    margin-bottom: 6px;
+    font-size: 13px;
+  }
+  /* Flex container for placing buttons side by side */
+  .btn-actions {
+    display: flex;
+    gap: 4px;
+    align-items: center;
+  }
+  .chapter-item .btn-sm {
+    display: inline-block;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .chapter-item .btn-danger {
+    background-color: #e74c3c;
+    color: #fff;
+    transition: background-color 0.3s ease;
+  }
+  .chapter-item .btn-danger:hover {
+    background-color: #c0392b;
+  }
+
+  /* Compact styling for Created Quizzes */
   .quiz-container {
     background-color: #fff;
-    padding: 12px 15px; /* Reduced padding for a compact look */
-    margin: 15px 0;     /* Reduced margin */
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 8px 10px;
+    margin: 10px 0;
+    border-radius: 6px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   }
-  .quiz-container ul { list-style-type: none; padding: 0; margin: 0; }
+  .quiz-container ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
   .quiz-container li {
-    padding: 8px 10px;   /* Reduced padding for a compact list */
+    padding: 6px 8px;
     border-bottom: 1px solid #e9ecef;
-    font-size: 14px;
+    font-size: 13px;
   }
-  .quiz-container li:last-child { border-bottom: none; }
-  
-  /* Additional tweaks for text-center elements */
+  .quiz-container li:last-child {
+    border-bottom: none;
+  }
+
+  /* Utility Class */
   .text-center {
     text-align: center;
   }
@@ -188,14 +266,24 @@
       <h3 class="text-center">{{ subject.subject_name }}</h3>
       <p class="text-center text-muted">{{ subject.description }}</p>
       <div class="text-center">
-        <a href="{{ url_for('edit_subject', subject_id=subject.id) }}" class="btn btn-warning">✏️ Edit</a>
+        <a href="{{ url_for('edit_subject', subject_id=subject.id) }}" class="btn btn-warning"> Edit Subject</a>
         <form method="POST" action="{{ url_for('delete_subject', subject_id=subject.id) }}" style="display: inline;">
-          <button type="submit" class="btn btn-danger" onclick="return confirm('Delete this subject?');">🗑️</button>
+          <button type="submit" class="btn btn-danger" onclick="return confirm('Delete this subject?');">Delete</button>
         </form>
       </div>
       <div>
         {% for chapter in subject.chapters %}
-        <p><strong>{{ chapter.chapter_name }}</strong> - {{ chapter.description }} ({{ chapter.questions|length }} questions)</p>
+          <div class="chapter-item">
+            <span>
+              <strong>{{ chapter.chapter_name }}</strong> - {{ chapter.description }} ({{ chapter.questions|length }} questions)
+            </span>
+            <div class="btn-actions">
+              <a href="{{ url_for('edit_chapter', chapter_id=chapter.id) }}" class="btn btn-warning btn-sm">✏️ Edit</a>
+              <form method="POST" action="{{ url_for('delete_chapter', chapter_id=chapter.id) }}" style="display: inline;">
+                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete this chapter?');">🗑️</button>
+              </form>
+            </div>
+          </div>
         {% endfor %}
       </div>
     </div>
@@ -222,7 +310,7 @@
         <form method="POST" action="{{ url_for('delete_quiz', quiz_id=quiz.id) }}" style="display: inline;">
           <input type="hidden" name="_method" value="DELETE">
           <button type="submit" class="btn btn-danger" onclick="return confirm('Delete this quiz?');">Delete</button>
-      </form>
+        </form>
       </li>
       {% endfor %}
     </ul>
