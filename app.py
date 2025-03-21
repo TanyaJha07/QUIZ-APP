@@ -358,6 +358,62 @@ def delete_subject(subject_id):
     flash("Subject deleted successfully!", "success")
     return redirect(url_for('admin_dashboard'))
 
+@app.route('/question/<int:question_id>/edit', methods=['GET', 'POST'])
+@admin_required
+def edit_question(question_id):
+    # Retrieve the question or return a 404 error if not found
+    question = Question.query.get_or_404(question_id)
+    
+    if request.method == 'POST':
+        # Update question details from the form submission
+        question.question_statement = request.form.get('question_statement')
+        question.option1 = request.form.get('option1')
+        question.option2 = request.form.get('option2')
+        question.option3 = request.form.get('option3')
+        question.option4 = request.form.get('option4')
+        question.correct_answer = request.form.get('correct_answer')
+        
+        try:
+            db.session.commit()
+            flash("Question updated successfully.", "success")
+        except Exception as e:
+            db.session.rollback()
+            flash("Error updating question.", "danger")
+        
+        # Redirect to the quiz view; adjust the quiz_id as needed.
+        # This example assumes the quiz is related via the chapter.
+        # For instance, redirect to the first quiz for the chapter.
+        if question.chapter.quizzes:
+            return redirect(url_for('view_quiz', quiz_id=question.chapter.quizzes[0].id))
+        else:
+            return redirect(url_for('admin_dashboard'))
+    
+    return render_template('edit_question.html', question=question)
+
+
+@app.route('/question/<int:question_id>/delete', methods=['POST'])
+@admin_required
+def delete_question(question_id):
+    question = Question.query.get_or_404(question_id)
+    
+    # Cache the quiz_id before deletion
+    quiz_id = None
+    if question.chapter and question.chapter.quizzes:
+        quiz_id = question.chapter.quizzes[0].id
+
+    try:
+        db.session.delete(question)
+        db.session.commit()
+        flash("Question deleted successfully.", "success")
+    except Exception as e:
+        db.session.rollback()
+        flash("Error deleting question.", "danger")
+    
+    if quiz_id:
+        return redirect(url_for('view_quiz', quiz_id=quiz_id))
+    else:
+        return redirect(url_for('admin_dashboard'))
+
 #--------------------------------- Routes for Quiz Management -----------------------------------------
 @app.route('/quiz', methods=['GET'])
 def get_quiz():
