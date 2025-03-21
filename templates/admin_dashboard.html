@@ -118,24 +118,29 @@
     <!-- Add Question Form -->
     <div class="form-container">
       <h3 class="text-center">Add Question</h3>
-      <form method="POST">
+      <form method="POST" action="{{ url_for('add_question') }}">
         <input type="hidden" name="action" value="add_question">
+        
         <label>Question Statement</label>
         <input type="text" name="question_statement" required>
+        
         <label>Options</label>
         <input type="text" name="option1" placeholder="Option 1" required>
         <input type="text" name="option2" placeholder="Option 2" required>
         <input type="text" name="option3" placeholder="Option 3" required>
         <input type="text" name="option4" placeholder="Option 4" required>
+        
         <label>Correct Answer</label>
         <input type="text" name="correct_answer" required>
+        
         <label>Select Chapter</label>
         <select name="chapter_id" required>
-          <option value="">-- Select Chapter --</option>
-          {% for chapter in chapters %}
-          <option value="{{ chapter.id }}">{{ chapter.chapter_name }}</option>
-          {% endfor %}
+            <option value="">-- Select Chapter --</option>
+            {% for chapter in chapters %}
+            <option value="{{ chapter.id }}">{{ chapter.chapter_name }}</option>
+            {% endfor %}
         </select>
+        
         <button type="submit">➕ Add Question</button>
       </form>
     </div>
@@ -168,6 +173,9 @@
   <!-- Created Quizzes -->
   <div class="quiz-container">
     <h2 class="text-center">Created Quizzes</h2>
+    <div class="text-center">
+      <a href="{{ url_for('create_quiz') }}" class="btn btn-primary">📚 Create Quiz</a>
+    </div>
     {% if quizzes %}
     <ul>
       {% for quiz in quizzes %}
@@ -178,16 +186,14 @@
         <strong>Remarks:</strong> {{ quiz.remarks }}
         <a href="{{ url_for('view_quiz', quiz_id=quiz.id) }}" class="btn btn-info">View</a>
         <form method="POST" action="{{ url_for('delete_quiz', quiz_id=quiz.id) }}" style="display: inline;">
+          <input type="hidden" name="_method" value="DELETE">
           <button type="submit" class="btn btn-danger" onclick="return confirm('Delete this quiz?');">Delete</button>
-        </form>
+      </form>
       </li>
       {% endfor %}
     </ul>
     {% else %}
     <p class="text-center text-muted">No quizzes available.</p>
-    <div class="text-center">
-      <a href="{{ url_for('create_quiz') }}" class="btn btn-primary">📚 Create Quiz</a>
-    </div>
     {% endif %}
 
   </div>

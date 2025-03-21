@@ -48,7 +48,8 @@ class Chapter(db.Model):
     subject_id = db.Column(db.Integer, db.ForeignKey('subjects.id'), nullable=False)
 
     # Relationship
-    quizzes = db.relationship('Quiz', backref='chapter', lazy=True)
+    quizzes = db.relationship('Quiz', back_populates='chapter', lazy=True)
+    questions = db.relationship('Question', back_populates='chapter', lazy=True)
 
     # Serialization
     def serialize(self):
@@ -71,7 +72,7 @@ class Quiz(db.Model):
     remarks = db.Column(db.String(255), nullable=True)
 
     # Relationships
-    questions = db.relationship('Question', backref='quiz', lazy=True)
+    chapter = db.relationship('Chapter', back_populates='quizzes')
     scores = db.relationship('Score', backref='quiz', lazy=True)
 
     # Serialization method
@@ -89,18 +90,20 @@ class Quiz(db.Model):
 # Question Model
 class Question(db.Model):
     __tablename__ = 'questions'
-    
     id = db.Column(db.Integer, primary_key=True)
-    quiz_id = db.Column(db.Integer, db.ForeignKey('quiz.id'), nullable=False)
-    question_statement = db.Column(db.Text, nullable=False)
-    option1 = db.Column(db.String(255), nullable=False)
-    option2 = db.Column(db.String(255), nullable=False)
-    option3 = db.Column(db.String(255), nullable=False)
-    option4 = db.Column(db.String(255), nullable=False)
-    correct_answer = db.Column(db.Integer, nullable=False)
+    question_statement = db.Column(db.String, nullable=False)
+    option1 = db.Column(db.String, nullable=False)
+    option2 = db.Column(db.String, nullable=False)
+    option3 = db.Column(db.String, nullable=False)
+    option4 = db.Column(db.String, nullable=False)
+    correct_answer = db.Column(db.String, nullable=False)
+    chapter_id = db.Column(db.Integer, db.ForeignKey('chapters.id'), nullable=False)
+
+    # Define relationship with chapter
+    chapter = db.relationship("Chapter", back_populates="questions")
 
 
-# Score Model (FIXED)
+# Score Model
 class Score(db.Model):
     __tablename__ = 'scores'
     

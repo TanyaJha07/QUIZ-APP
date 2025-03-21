@@ -58,16 +58,16 @@ with app.app_context():
 if not quiz:
     with app.app_context():
         chapter = Chapter.query.first()
-        quiz = Quiz(name="Sample Quiz", chapter_id=chapter.id)  # Create a quiz if none exists
+        quiz = Quiz(name="Sample Quiz", chapter_id=chapter.id, date_of_quiz=datetime.now(), time_duration=30, remarks="20")  # Create a quiz if none exists
         db.session.add(quiz)
         db.session.commit()
 
         # Dummy data for questions (now includes quiz_id)
         questions = [
-            {"quiz_id": quiz.id, "question_statement": "What is 2+2?", "option1": "4", "option2": "5", "option3": "6", "option4": "7", "correct_answer": "4"},
-            {"quiz_id": quiz.id, "question_statement": "What is 5+5?", "option1": "10", "option2": "15", "option3": "20", "option4": "25", "correct_answer": "10"},
-            {"quiz_id": quiz.id, "question_statement": "What is 10+10?", "option1": "20", "option2": "30", "option3": "40", "option4": "50", "correct_answer": "20"},
-            {"quiz_id": quiz.id, "question_statement": "What is 20+20?", "option1": "40", "option2": "60", "option3": "80", "option4": "100", "correct_answer": "40"},
+            {"question_statement": "What is 2+2?", "option1": "4", "option2": "5", "option3": "6", "option4": "7", "correct_answer": "4", "chapter_id": 1},
+            {"question_statement": "What is 5+5?", "option1": "10", "option2": "15", "option3": "20", "option4": "25", "correct_answer": "10", "chapter_id": 1},
+            {"question_statement": "What is 10+10?", "option1": "20", "option2": "30", "option3": "40", "option4": "50", "correct_answer": "20", "chapter_id": 2},
+            {"question_statement": "What is 20+20?", "option1": "40", "option2": "60", "option3": "80", "option4": "100", "correct_answer": "40", "chapter_id": 2},
         ]
 
         # Insert only if question doesn't exist
@@ -75,13 +75,13 @@ if not quiz:
             existing_question = Question.query.filter_by(question_statement=question["question_statement"]).first()
             if not existing_question:
                 new_question = Question(
-                    quiz_id=question["quiz_id"],  # Ensure quiz_id is included
                     question_statement=question["question_statement"],
                     option1=question["option1"],
                     option2=question["option2"],
                     option3=question["option3"],
                     option4=question["option4"],
-                    correct_answer=question["correct_answer"]
+                    correct_answer=question["correct_answer"],
+                    chapter_id=question["chapter_id"]
                 )
                 db.session.add(new_question)
 
@@ -448,16 +448,20 @@ def edit_quiz(quiz_id):
     db.session.commit()
     return jsonify({"message": "Quiz updated successfully"}), 200
 
-@app.route('/quiz/<int:quiz_id>', methods=['DELETE'])
+@app.route('/quiz/<int:quiz_id>', methods=['POST'])
 def delete_quiz(quiz_id):
     if "user_id" not in session or session['user_role'] != 'admin':
-        return jsonify({"error": "Unauthorized access"}), 403
+        flash("Unauthorized access!", "danger")
+        return redirect(url_for('admin_dashboard'))  # Redirect if unauthorized
 
-    quiz = Quiz.query.get_or_404(quiz_id)
-    db.session.delete(quiz)
-    db.session.commit()
+    if request.form.get('_method') == 'DELETE':
+        quiz = Quiz.query.get_or_404(quiz_id)
+        db.session.delete(quiz)
+        db.session.commit()
+        flash("Quiz deleted successfully!", "success")
+        return redirect(url_for('admin_dashboard'))  # Redirect back to admin dashboard
 
-    return jsonify({"message": "Quiz deleted successfully"}), 200
+    return jsonify({"error": "Method not allowed"}), 405
 
 @app.route('/quiz/<int:quiz_id>/start', methods=['GET'])
 def start_quiz(quiz_id):
@@ -467,15 +471,21 @@ def start_quiz(quiz_id):
 
 #--------------------------------- Routes for Question Management -----------------------------------------
 @app.route('/add_question', methods=['POST'])
-@admin_required
 def add_question():
-    question_statement = request.form['question_statement']
-    option1 = request.form['option1']
-    option2 = request.form['option2']
-    option3 = request.form['option3']
-    option4 = request.form['option4']
-    correct_answer = request.form['correct_answer']
-    chapter_id = request.form['chapter_id']
+    question_statement = request.form.get('question_statement')
+    option1 = request.form.get('option1')
+    option2 = request.form.get('option2')
+    option3 = request.form.get('option3')
+    option4 = request.form.get('option4')
+    correct_answer = request.form.get('correct_answer')
+    chapter_id = request.form.get('chapter_id')  # Capture chapter ID
+
+    # Validate inputs
+    if not question_statement or not option1 or not option2 or not option3 or not option4 or not correct_answer or not chapter_id:
+        flash("All fields are required!", "danger")
+        return redirect(url_for('admin_dashboard'))
+
+    # Create a new question
     new_question = Question(
         question_statement=question_statement,
         option1=option1,
@@ -487,6 +497,7 @@ def add_question():
     )
     db.session.add(new_question)
     db.session.commit()
+
     flash("Question added successfully!", "success")
     return redirect(url_for('admin_dashboard'))
 
