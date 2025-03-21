@@ -395,8 +395,7 @@ def create_quiz():
         else:
             time_duration = None
 
-        print(f"Received - Chapter ID: {chapter_id}, Date: {date_of_quiz_str}, Duration: {time_duration}, Remarks: {remarks}, Quiz Name: {quiz_name}")
-
+    
         if not chapter_id or not date_of_quiz_str or not time_duration or not quiz_name:
             flash("Missing required fields!", "danger")
             return redirect(url_for('create_quiz'))
