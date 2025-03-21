@@ -368,13 +368,11 @@ def get_quiz():
 @app.route('/quiz/<int:quiz_id>', methods=['GET'])
 def view_quiz(quiz_id):
     quiz = Quiz.query.filter_by(id=quiz_id).first()
-    
     if not quiz:
         return "Quiz not found", 404
     
     # Fetch questions based on chapter_id from the quiz
     questions = Question.query.filter_by(chapter_id=quiz.chapter_id).all()
-    print(questions)
     return render_template('view_quiz.html', quiz=quiz, questions=questions)
 
 @app.route('/create_quiz', methods=['POST', 'GET'])
