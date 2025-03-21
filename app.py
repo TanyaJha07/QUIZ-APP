@@ -374,10 +374,20 @@ def create_quiz():
     if request.method == 'POST':
         chapter_id = request.form.get('chapter_id')
         date_of_quiz_str = request.form.get('date_of_quiz')
-        time_duration = request.form.get('time_duration')
+        duration_value = request.form.get('duration_value')
+        duration_unit = request.form.get('duration_unit')
         remarks = request.form.get('remarks')
+        quiz_name = request.form.get('quiz_name')  # Capture quiz name
 
-        if not chapter_id or not date_of_quiz_str or not time_duration:
+        # Combine duration value and unit
+        if duration_value and duration_unit:
+            time_duration = f"{duration_value} {duration_unit}"
+        else:
+            time_duration = None
+
+        print(f"Received - Chapter ID: {chapter_id}, Date: {date_of_quiz_str}, Duration: {time_duration}, Remarks: {remarks}, Quiz Name: {quiz_name}")
+
+        if not chapter_id or not date_of_quiz_str or not time_duration or not quiz_name:
             flash("Missing required fields!", "danger")
             return redirect(url_for('create_quiz'))
 
@@ -388,28 +398,34 @@ def create_quiz():
             flash("Invalid date format!", "danger")
             return redirect(url_for('create_quiz'))
 
-        # Convert time duration (assume it's in minutes)
+        # Convert time duration to minutes
         try:
-            time_duration = int(time_duration)
-        except ValueError:
+            duration_parts = time_duration.split()  # Split the string into parts
+            duration_value = int(duration_parts[0])  # Get the numeric part
+            if 'hours' in duration_parts:
+                time_duration_minutes = duration_value * 60  # Convert hours to minutes
+            else:
+                time_duration_minutes = duration_value  # Already in minutes
+        except (ValueError, IndexError):
             flash("Invalid time duration!", "danger")
             return redirect(url_for('create_quiz'))
 
+        # Continue with saving the quiz
         new_quiz = Quiz(
-            chapter_id=chapter_id, 
-            date_of_quiz=date_of_quiz, 
-            time_duration=time_duration, 
+            chapter_id=chapter_id,
+            name=quiz_name,  # Save the quiz name
+            date_of_quiz=date_of_quiz,
+            time_duration=time_duration_minutes,  # Save in minutes
             remarks=remarks
         )
         db.session.add(new_quiz)
         db.session.commit()
 
         flash("Quiz created successfully!", "success")
-        return redirect(url_for('get_quiz'))
+        return redirect(url_for('admin_dashboard'))
 
     return render_template('quiz.html')
 
-#--------------------------------- Routes for Quiz Management -----------------------------------------
 @app.route('/quiz/<int:quiz_id>', methods=['GET'])
 def view_quiz(quiz_id):
     quiz = Quiz.query.options(joinedload(Quiz.questions)).get_or_404(quiz_id)

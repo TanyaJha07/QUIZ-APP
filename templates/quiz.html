@@ -6,9 +6,16 @@
     <h1>Create a New Quiz</h1>
     <form id="quizForm" method="POST" action="{{ url_for('create_quiz') }}">
         <div>
+            <label for="quiz_name">Quiz Name:</label>
+            <input type="text" id="quiz_name" name="quiz_name" required>
+        </div>
+        <div>
             <label for="chapter_name">Chapter Name:</label>
             <select id="chapter_name" name="chapter_id" required>
                 <!-- Options will be populated here -->
+                {% for chapter in chapters %}
+                <option value="{{ chapter.id }}">{{ chapter.chapter_name }}</option>
+                {% endfor %}
             </select>
         </div>
         <div>
@@ -32,50 +39,19 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            fetch('/api/chapters') // This should be the endpoint that returns chapter data
+            // Fetch chapters from the API
+            fetch('/api/chapters')
                 .then(response => response.json())
                 .then(data => {
                     const chapterSelect = document.getElementById('chapter_name');
                     data.chapters.forEach(chapter => {
                         const option = document.createElement('option');
-                        option.value = chapter.id; // Assuming each chapter has an 'id'
-                        option.textContent = chapter.name; // Assuming each chapter has a 'name'
+                        option.value = chapter.id;
+                        option.textContent = chapter.chapter_name;
                         chapterSelect.appendChild(option);
                     });
                 })
                 .catch(error => console.error('Error fetching chapters:', error));
         });
-    
-        document.getElementById('quizForm').onsubmit = function(event) {
-            event.preventDefault(); // Prevent default form submission
-            const formData = new FormData(this);
-            fetch(this.action, {
-                method: 'POST',
-                body: JSON.stringify({
-                    chapter_id: formData.get('chapter_id'), // Use chapter ID here
-                    date_of_quiz: formData.get('date_of_quiz'),
-                    time_duration: `${formData.get('duration_value')} ${formData.get('duration_unit')}`, // Combine value and unit
-                    remarks: formData.get('remarks')
-                }),
-                headers: {
-                    'Content-Type': 'application/json'
-                }
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.error) {
-                    alert(data.error);
-                } else {
-                    alert(data.message);
-                    window.location.href = "{{ url_for('admin_dashboard') }}"; // Redirect to admin dashboard
-                }
-            })
-            .catch(error => console.error('Error:', error));
-        };
     </script>
 {% endblock %}
