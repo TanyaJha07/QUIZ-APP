@@ -5,6 +5,13 @@
 {% block content %}
 <div class="container">
     <h1 class="text-center">Take Quiz: {{ quiz.name }}</h1>
+    
+    <div class="quiz-details text-center">
+        <p><strong>Date of Quiz:</strong> {{ quiz.date_of_quiz.strftime('%Y-%m-%d') }}</p>
+        <p><strong>Duration:</strong> <span id="timer">{{ quiz.time_duration }}</span> minutes</p>
+        <p><strong>Total Questions:</strong> {{ questions|length }}</p> 
+    </div>
+
     <form method="POST" action="{{ url_for('submit_quiz', quiz_id=quiz.id) }}" onsubmit="setStartTime()">
         <div class="quiz-questions" style="text-align: left;">
             {% for question in questions %}
@@ -22,4 +29,22 @@
         <button type="submit" class="btn btn-primary" style="text-align: center;">Submit Quiz</button>
     </form>
 </div>
+
+<script>
+let timeRemaining = {{ quiz.time_duration }} * 60; 
+const timerElement = document.getElementById('timer');
+
+const countdown = setInterval(() => {
+    if (timeRemaining <= 0) {
+        clearInterval(countdown);
+        alert("Time's up! Submitting the quiz...");
+        window.location.href = "{{ url_for('submit_quiz', quiz_id=quiz.id) }}"; 
+    } else {
+        timeRemaining--;
+        const minutes = Math.floor(timeRemaining / 60);
+        const seconds = timeRemaining % 60;
+        timerElement.textContent = `${minutes} minutes ${seconds < 10 ? '0' : ''}${seconds} seconds`;
+    }
+}, 1000);
+</script>
 {% endblock %}

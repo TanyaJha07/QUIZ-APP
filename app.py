@@ -526,12 +526,13 @@ def submit_quiz(quiz_id):
         user_id=user_id, 
         quiz_id=quiz_id, 
         total_scored=score, 
-        time_stamp_of_attempt=start_time
+        time_stamp_of_attempt=start_time,
+        time_taken=time_taken
         )
     db.session.add(new_score)
     db.session.commit()
 
-    return render_template('quiz_results.html', quiz=quiz, score=score, total_questions=total_questions, score_percentage=score_percentage)
+    return render_template('quiz_results.html', quiz=quiz, score=score, total_questions=total_questions, score_percentage=score_percentage, time_taken=time_taken)
 
 @app.route('/quiz/<int:quiz_id>', methods=['POST'])
 def delete_quiz(quiz_id):

@@ -121,3 +121,4 @@ class Score(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     time_stamp_of_attempt = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
     total_scored = db.Column(db.Integer, nullable=False)
+    time_taken = db.Column(db.Integer, nullable=False)
