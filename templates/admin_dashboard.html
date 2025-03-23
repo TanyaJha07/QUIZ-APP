@@ -107,7 +107,7 @@
   /* Change EDIT button to nav-bar blue (#3a3d98) */
   .subject-item .btn-warning,
   .chapter-item .btn-warning {
-    background-color:#007bff;/* Change EDIT button to nav-bar blue (#3a3d98) */;
+    background-color: #007bff;
     color: #fff;
     transition: background-color 0.3s ease;
   }
@@ -293,7 +293,7 @@
   </div>
 
   <!-- Created Quizzes -->
-  <div class="quiz-container">
+  <div class="quiz-container" id="created-quizzes">
     <h2 class="text-center">Created Quizzes</h2>
     <div class="text-center">
       <a href="{{ url_for('create_quiz') }}" class="btn btn-primary">📚 Create Quiz</a>
@@ -319,4 +319,16 @@
     {% endif %}
   </div>
 </div>
+
+<script>
+  // Modify the Quiz link in the navbar to scroll to the Created Quizzes section
+  document.addEventListener('DOMContentLoaded', function() {
+    var navLinks = document.querySelectorAll('nav ul li a');
+    navLinks.forEach(function(link) {
+      if(link.textContent.trim() === 'Quiz') {
+        link.setAttribute('href', '#created-quizzes');
+      }
+    });
+  });
+</script>
 {% endblock %}

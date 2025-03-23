@@ -2,40 +2,101 @@
 
 {% block title %}Search Results{% endblock %}
 
+{% block styles %}
+<style>
+  /* Subject Card Styles */
+  .subject-card {
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+  }
+  .subject-card:hover {
+      transform: translateY(-5px);
+  }
+  .subject-card .edit-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+  }
+
+  /* Chapter Item Styles */
+  .chapter-item {
+      padding: 15px;
+      background-color: #fff;
+      border: 1px solid #eee;
+      border-radius: 5px;
+      margin-bottom: 10px;
+      position: relative;
+      transition: background-color 0.3s ease;
+  }
+  .chapter-item:hover {
+      background-color: #f9f9f9;
+  }
+  .chapter-item .edit-btn {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      right: 15px;
+  }
+  .btn {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background-color: #007BFF;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+  /* Increase specificity for the admin dashboard button */
+  a.btn.btn-primary {
+      background-color: #007BFF;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 4px;
+      transition: background-color 0.3s ease;
+  }
+</style>
+{% endblock %}
+
 {% block content %}
-<div class="container mt-5">
-    <div class="text-center mb-4">
-        <h2 class="display-4">Search Results for "{{ query }}"</h2>
-        <hr class="w-25 mx-auto">
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h2 class="display-4 text-primary">Search Results for "{{ query }}"</h2>
+        <hr class="w-25 mx-auto border-primary">
     </div>
     
     {% if subjects %}
     <div class="mb-5">
-        <h3 class="mb-3">Subjects</h3>
+        <h3 class="mb-4 text-secondary">Subjects</h3>
         <div class="row">
             {% for subject in subjects %}
             <div class="col-md-6 mb-4">
-                <div class="card shadow-sm">
+                <div class="card subject-card">
                     <div class="card-body">
-                        <h4 class="card-title">{{ subject.subject_name }}</h4>
-                        <p class="card-text">{{ subject.description }}</p>
+                        <h4 class="card-title text-dark">{{ subject.subject_name }}</h4>
+                        <p class="card-text text-muted">{{ subject.description }}</p>
                         {% set total_questions = 0 %}
                         {% for chapter in subject.chapters %}
                             {% set total_questions = total_questions + chapter.questions|length %}
                         {% endfor %}
-                        <p><em>Total Questions in Subject: </em><strong>{{ total_questions }}</strong></p>
-                        <a href="{{ url_for('edit_subject', subject_id=subject.id) }}" class="btn btn-primary btn-sm">Edit Subject</a>
+                        <p class="mb-3">
+                          <em>Total Questions in Subject: </em>
+                          <strong class="text-info">{{ total_questions }}</strong>
+                        </p>
+                        <a href="{{ url_for('edit_subject', subject_id=subject.id) }}" class="btn btn-primary btn-sm edit-btn">Edit Subject</a>
                         {% if subject.chapters %}
                         <hr>
-                        <h5>Chapters:</h5>
+                        <h5 class="text-secondary">Chapters:</h5>
                         <ul class="list-group list-group-flush">
                             {% for chapter in subject.chapters %}
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <li class="list-group-item chapter-item">
                                 <span>
                                     {{ chapter.chapter_name }} - {{ chapter.description }}
                                     (<strong>{{ chapter.questions|length }} questions</strong>)
                                 </span>
-                                <a href="{{ url_for('edit_chapter', chapter_id=chapter.id) }}" class="btn btn-outline-secondary btn-sm">Edit Chapter</a>
+                                <a href="{{ url_for('edit_chapter', chapter_id=chapter.id) }}" class="btn btn-outline-secondary btn-sm edit-btn">Edit Chapter</a>
                             </li>
                             {% endfor %}
                         </ul>
@@ -48,31 +109,36 @@
     </div>
     {% else %}
     <div class="mb-5">
-        <h3>Subjects</h3>
-        <p>No subjects found matching your query.</p>
+        <h3 class="mb-4 text-secondary">Subjects</h3>
+        <p class="text-muted">No subjects found matching your query.</p>
     </div>
     {% endif %}
     
     {% if chapters %}
     <div>
-        <h3 class="mb-3">Chapters</h3>
+        <h3 class="mb-4 text-secondary">Chapters</h3>
         <ul class="list-group">
             {% for chapter in chapters %}
-            <li class="list-group-item d-flex justify-content-between align-items-center">
+            <li class="list-group-item chapter-item">
                 <div>
-                    <h5 class="mb-1">{{ chapter.chapter_name }}</h5>
-                    <p class="mb-1">{{ chapter.description }}</p>
-                    <small><strong>{{ chapter.questions|length }} questions</strong></small>
+                    <h5 class="mb-1 text-dark">{{ chapter.chapter_name }}</h5>
+                    <p class="mb-1 text-muted">{{ chapter.description }}</p>
+                    <small class="text-info">
+                        <strong>{{ chapter.questions|length }} questions</strong>
+                    </small>
                 </div>
-                <a href="{{ url_for('edit_chapter', chapter_id=chapter.id) }}" class="btn btn-outline-secondary btn-sm">Edit Chapter</a>
+                <a href="{{ url_for('edit_chapter', chapter_id=chapter.id) }}" class="btn btn-outline-secondary btn-sm edit-btn">Edit Chapter</a>
             </li>
             {% endfor %}
         </ul>
     </div>
     {% else %}
     <div>
-        <h3>Chapters</h3>
-        <p>No chapters found matching your query.</p>
+        <h3 class="mb-4 text-secondary">Chapters</h3>
+        <p class="text-muted">No chapters found matching your query.</p>
+    </div>
+    <div class="text-center">
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-primary">Back to Dashboard</a>
     </div>
     {% endif %}
 </div>
