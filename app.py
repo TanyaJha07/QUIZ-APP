@@ -126,7 +126,8 @@ def signup():
     if request.method == 'POST':
         username = request.form['username']
         email = request.form['email']
-        password = generate_password_hash(request.form['password'])  # Hash password before storing
+        # Hash the password and assign it to a variable
+        hashed_password = generate_password_hash(request.form['password'])
         qualification = request.form['qualification']
         dob_string = request.form['dob']
 
@@ -137,14 +138,14 @@ def signup():
             flash("Email is already registered. Please login or use a different email.", "danger")
             return redirect(url_for('signup'))
 
-        user = User(username=username, email=email, password=password, qualification=qualification, dob=dob)
+        # Use 'password_hash' to match the model definition
+        user = User(username=username, email=email, password_hash=hashed_password, qualification=qualification, dob=dob)
         db.session.add(user)
         db.session.commit()
 
         return redirect(url_for('index'))
 
     return render_template('signup.html')
-
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
