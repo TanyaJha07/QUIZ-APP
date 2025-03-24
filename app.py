@@ -614,6 +614,10 @@ def summary1():
                            month_counts=month_counts,
                            subject_names=subject_names,
                            subject_quiz_counts=subject_quiz_counts)
+@app.route('/summary')
+def summary():
+    return render_template('summary.html')
+
 @app.route('/score')
 def score():
     return render_template('score.html')
