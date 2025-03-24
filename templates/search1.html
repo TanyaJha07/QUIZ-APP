@@ -7,7 +7,7 @@
 {% block content %}
   <div class="container mt-4">
     <h1 class="text-center">Search Quizzes</h1>
-    <form method="GET" action="{{ url_for('user_search') }}" class="form-inline justify-content-center mb-4">
+    <form method="GET" action="{{ url_for('search_handler') }}" class="form-inline justify-content-center mb-4">
       <div class="form-group mx-sm-3 mb-2">
         <input type="text" name="query" class="form-control" placeholder="Search by date, score, subject or chapter" value="{{ query }}">
       </div>
