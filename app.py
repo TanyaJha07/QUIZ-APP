@@ -10,11 +10,11 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///quiz.db'
 app.secret_key = "your_super_secret_key_here"
 db.init_app(app)
 
-# Ensure that the database schema is updated
+
 with app.app_context():
     db.create_all()
 
-    # Dummy data for subjects
+    # Dummy data 
     subjects_data = [
         {"subject_name": "Mathematics", "description": "Study of numbers, shapes, and patterns."},
         {"subject_name": "Science", "description": "Study of the physical and natural world."},
@@ -29,7 +29,6 @@ with app.app_context():
 
     db.session.commit()
 
-    # Dummy data for chapters (Ensure correct subject_id is used)
     chapters_data = [
         {"chapter_name": "Algebra", "description": "Introduction to algebra.", "subject_name": "Mathematics"},
         {"chapter_name": "Geometry", "description": "Basics of geometry.", "subject_name": "Mathematics"},
@@ -62,7 +61,7 @@ if not quiz:
         db.session.add(quiz)
         db.session.commit()
 
-        # Dummy data for questions (now includes quiz_id)
+        # Dummy data for question
         questions = [
             {"question_statement": "What is 2+2?", "option1": "4", "option2": "5", "option3": "6", "option4": "7", "correct_answer": "4", "chapter_id": 1},
             {"question_statement": "What is 5+5?", "option1": "10", "option2": "15", "option3": "20", "option4": "25", "correct_answer": "10", "chapter_id": 1},
@@ -88,7 +87,7 @@ if not quiz:
         db.session.commit()
         print("Questions added successfully!")
 
-        # Dummy data for admin user
+        # default admin n user
         admin_email = "admin@example.com"
         admin_password = "admin"
 
@@ -101,7 +100,6 @@ if not quiz:
 
         db.session.commit()
 
-        # Dummy data for regular user
         user_email = "user@email.com"
         user_password = "user"
 
@@ -172,6 +170,7 @@ def login():
 
 #--------------------------------- Admin Dashboard -----------------------------------------
 from functools import wraps
+# wrap is a decorator used to modify a function without changing its source code or structure at runtime
 
 def admin_required(f):
     @wraps(f)
@@ -347,12 +346,10 @@ def edit_subject(subject_id):
 def delete_subject(subject_id):
     subject = Subject.query.get_or_404(subject_id)
 
-    # Delete all chapters associated with the subject
+    # Deletes all chapters associated with the subject when i click on delete subject
     chapters = Chapter.query.filter_by(subject_id=subject_id).all()
     for chapter in chapters:
         db.session.delete(chapter)
-
-    # Now delete the subject
     db.session.delete(subject)
     db.session.commit()
 
@@ -366,7 +363,7 @@ def edit_question(question_id):
     question = Question.query.get_or_404(question_id)
     
     if request.method == 'POST':
-        # Update question details from the form submission
+        # Update the question with the form data
         question.question_statement = request.form.get('question_statement')
         question.option1 = request.form.get('option1')
         question.option2 = request.form.get('option2')
@@ -380,10 +377,7 @@ def edit_question(question_id):
         except Exception as e:
             db.session.rollback()
             flash("Error updating question.", "danger")
-        
-        # Redirect to the quiz view; adjust the quiz_id as needed.
-        # This example assumes the quiz is related via the chapter.
-        # For instance, redirect to the first quiz for the chapter.
+  
         if question.chapter.quizzes:
             return redirect(url_for('view_quiz', quiz_id=question.chapter.quizzes[0].id))
         else:
@@ -397,7 +391,6 @@ def edit_question(question_id):
 def delete_question(question_id):
     question = Question.query.get_or_404(question_id)
     
-    # Cache the quiz_id before deletion
     quiz_id = None
     if question.chapter and question.chapter.quizzes:
         quiz_id = question.chapter.quizzes[0].id
@@ -457,7 +450,7 @@ def create_quiz():
             flash("Missing required fields!", "danger")
             return redirect(url_for('create_quiz'))
 
-        # Convert date
+        # Convert date datetime
         try:
             date_of_quiz = datetime.strptime(date_of_quiz_str, "%Y-%m-%d").date()
         except ValueError:
@@ -481,7 +474,7 @@ def create_quiz():
             chapter_id=chapter_id,
             name=quiz_name,  # Save the quiz name
             date_of_quiz=date_of_quiz,
-            time_duration=time_duration_minutes,  # Save in minutes
+            time_duration=time_duration_minutes,  # Save the time duration in minutes
             remarks=remarks
         )
         db.session.add(new_quiz)
