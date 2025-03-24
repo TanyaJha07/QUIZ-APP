@@ -686,88 +686,60 @@ def score():
 
     return render_template('score.html', score_data=score_data)
 # search for admins
-@app.route('/search')
-def search():
-    if "user_id" not in session or session.get("user_role") != "admin":
+@app.route('/search', methods=['GET'])
+def search_handler():
+    # Check if the user is logged in
+    if "user_id" not in session:
         flash("Unauthorized access!", "danger")
         return redirect(url_for("login"))
 
     query = request.args.get("query", "").strip()
-    subjects, chapters = [], []
-
-    if query:
-        subjects = Subject.query.filter(
-            (Subject.subject_name.ilike(f"%{query}%")) | (Subject.description.ilike(f"%{query}%"))
-        ).all()
-
-        chapters = Chapter.query.filter(
-            (Chapter.chapter_name.ilike(f"%{query}%")) | (Chapter.description.ilike(f"%{query}%"))
-        ).all()
-
-    return render_template("search.html", query=query, subjects=subjects, chapters=chapters)
-# search user
-# Add this new route to your app.py
-
-@app.route('/search1', methods=['GET'])
-def user_search():
-    # Ensure the user is logged in and is a regular user
-    if "user_id" not in session or session.get("user_role") != "user":
-        flash("Unauthorized access!", "danger")
-        return redirect(url_for("login"))
     
-    query = request.args.get("query", "").strip()
-    quizzes = []
+    if session.get("user_role") == "admin":
+        # Admin search logic
+        subjects, chapters = [], []
+        if query:
+            subjects = Subject.query.filter(
+                (Subject.subject_name.ilike(f"%{query}%")) | 
+                (Subject.description.ilike(f"%{query}%"))
+            ).all()
+
+            chapters = Chapter.query.filter(
+                (Chapter.chapter_name.ilike(f"%{query}%")) | 
+                (Chapter.description.ilike(f"%{query}%"))
+            ).all()
+        return render_template("search.html", query=query, subjects=subjects, chapters=chapters)
     
-    if query:
-        from sqlalchemy import or_, func
-        # Search by quiz name, quiz date (formatted as YYYY-MM-DD), chapter name, or subject name.
-        quizzes = Quiz.query.join(Chapter).join(Subject).filter(
-            or_(
-                Quiz.name.ilike(f"%{query}%"),
-                func.strftime('%Y-%m-%d', Quiz.date_of_quiz).ilike(f"%{query}%"),
-                Chapter.chapter_name.ilike(f"%{query}%"),
-                Subject.subject_name.ilike(f"%{query}%")
-            )
-        ).all()
-        
-        # If query is numeric, also search based on the user's score for the quiz.
-        if query.isdigit():
-            numeric_query = int(query)
-            user_scores = Score.query.filter_by(user_id=session.get("user_id"), total_scored=numeric_query).all()
-            quiz_ids = [score.quiz_id for score in user_scores]
-            quiz_by_score = Quiz.query.filter(Quiz.id.in_(quiz_ids)).all()
-            # Merge both results (removing duplicates)
-            quizzes = list({q.id: q for q in quizzes + quiz_by_score}.values())
     else:
-        quizzes = Quiz.query.order_by(Quiz.date_of_quiz).all()
-    
-    return render_template("search1.html", query=query, quizzes=quizzes)
+        # User search logic
+        quizzes = []
+        if query:
+            from sqlalchemy import or_, func
+            quizzes = Quiz.query.join(Chapter).join(Subject).filter(
+                or_(
+                    Quiz.name.ilike(f"%{query}%"),
+                    func.strftime('%Y-%m-%d', Quiz.date_of_quiz).ilike(f"%{query}%"),
+                    Chapter.chapter_name.ilike(f"%{query}%"),
+                    Subject.subject_name.ilike(f"%{query}%")
+                )
+            ).all()
+
+            if query.isdigit():
+                numeric_query = int(query)
+                user_scores = Score.query.filter_by(user_id=session.get("user_id"), total_scored=numeric_query).all()
+                quiz_ids = [score.quiz_id for score in user_scores]
+                quiz_by_score = Quiz.query.filter(Quiz.id.in_(quiz_ids)).all()
+                quizzes = list({q.id: q for q in quizzes + quiz_by_score}.values())
+        else:
+            quizzes = Quiz.query.order_by(Quiz.date_of_quiz).all()
+
+        return render_template("search1.html", query=query, quizzes=quizzes)
 
 @app.route('/logout')
 def logout():
     session.clear()  # Safely clear session
     flash("You have been logged out successfully!", "info")
     return redirect(url_for('index'))
-
-# Optional JSON API for search
-@app.route('/api/search')
-def api_search():
-    if "user_id" not in session or session.get("user_role") != "admin":
-        return jsonify({"error": "Unauthorized access"}), 403
-
-    query = request.args.get("query", "").strip()
-    subjects, chapters = [], []
-
-    if query:
-        subjects = [s.serialize() for s in Subject.query.filter(
-            (Subject.subject_name.ilike(f"%{query}%")) | (Subject.description.ilike(f"%{query}%"))
-        ).all()]
-
-        chapters = [c.serialize() for c in Chapter.query.filter(
-            (Chapter.chapter_name.ilike(f"%{query}%")) | (Chapter.description.ilike(f"%{query}%"))
-        ).all()]
-
-    return jsonify({"query": query, "subjects": subjects, "chapters": chapters})
 
 
 if __name__ == "__main__":

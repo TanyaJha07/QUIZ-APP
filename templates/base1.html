@@ -134,7 +134,7 @@
             <li><a href="{{ url_for('summary1') }}">Summary</a></li>
             <li><a href="{{ url_for('logout') }}">Logout</a></li>
             <li>
-                <form action="{{ url_for('search') }}" method="GET" class="search-form">
+                <form action="{{ url_for('search_handler') }}" method="GET" class="search-form">
                     <input type="text" name="query" placeholder="Search..." required>
                     <button type="submit">🔍</button>
                 </form>
