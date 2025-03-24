@@ -47,21 +47,57 @@
     border-color: #007bff;
     outline: none;
   }
+  /* Updated Button styling for admin dashboard to be similar */
   .form-container button {
-    padding: 6px 10px;
-    font-size: 13px;
-    border-radius: 4px;
+    display: block;
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
     border: none;
+    border-radius: 8px;
     cursor: pointer;
-    background: #007bff;
+    background-color: #3a3d98;
     color: #fff;
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
     transition: background 0.3s;
   }
   .form-container button:hover {
-    background: #0056b3;
+    background-color: #272a73;
   }
-
+  /* Updated styling for Edit buttons */
+  .subject-item .btn-warning,
+  .chapter-item .btn-warning {
+    background-color: #3a3d98;
+    color: #fff;
+    transition: background-color 0.3s ease;
+  }
+  .subject-item .btn-warning:hover,
+  .chapter-item .btn-warning:hover {
+    background-color: #272a73;
+  }
+  /* Updated global styling for Delete buttons (red) */
+  .btn-danger {
+    display: inline-block;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background-color: #e74c3c;
+    color: #fff;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+    transition: background 0.3s;
+  }
+  .btn-danger:hover {
+    background-color: #c0392b;
+  }
+  /* Override form styling from base.html for delete forms */
+  .dashboard-container form.inline-delete {
+    background: none;
+    padding: 0;
+    box-shadow: none;
+    border: none;
+  }
   /* Compact styling for Existing Subjects & Chapters */
   .subject-container {
     display: flex;
@@ -104,26 +140,6 @@
     text-decoration: none;
     margin: 2px;
   }
-  /* Change EDIT button to nav-bar blue (#3a3d98) */
-  .subject-item .btn-warning,
-  .chapter-item .btn-warning {
-    background-color: #007bff;
-    color: #fff;
-    transition: background-color 0.3s ease;
-  }
-  .subject-item .btn-warning:hover,
-  .chapter-item .btn-warning:hover {
-    background-color: #007bff;
-  }
-  .subject-item .btn-danger {
-    background-color: #e74c3c;
-    color: #fff;
-    transition: background-color 0.3s ease;
-  }
-  .subject-item .btn-danger:hover {
-    background-color: #c0392b;
-  }
-
   /* Styling for Chapter Edit/Delete Buttons */
   .chapter-item {
     display: flex;
@@ -147,19 +163,10 @@
     font-size: 12px;
     font-weight: bold;
     border: none;
-    border-radius: 4px;
+    border-radius: 8px;
     cursor: pointer;
     text-decoration: none;
   }
-  .chapter-item .btn-danger {
-    background-color: #e74c3c;
-    color: #fff;
-    transition: background-color 0.3s ease;
-  }
-  .chapter-item .btn-danger:hover {
-    background-color: #c0392b;
-  }
-
   /* Compact styling for Created Quizzes */
   .quiz-container {
     background-color: #fff;
@@ -267,7 +274,7 @@
       <p class="text-center text-muted">{{ subject.description }}</p>
       <div class="text-center">
         <a href="{{ url_for('edit_subject', subject_id=subject.id) }}" class="btn btn-warning"> Edit Subject</a>
-        <form method="POST" action="{{ url_for('delete_subject', subject_id=subject.id) }}" style="display: inline;">
+        <form method="POST" action="{{ url_for('delete_subject', subject_id=subject.id) }}" class="inline-delete" style="display: inline;">
           <button type="submit" class="btn btn-danger" onclick="return confirm('Delete this subject?');">Delete</button>
         </form>
       </div>
@@ -278,9 +285,9 @@
               <strong>{{ chapter.chapter_name }}</strong> - {{ chapter.description }} ({{ chapter.questions|length }} questions)
             </span>
             <div class="btn-actions">
-              <a href="{{ url_for('edit_chapter', chapter_id=chapter.id) }}" class="btn btn-warning btn-sm">✏️ Edit</a>
-              <form method="POST" action="{{ url_for('delete_chapter', chapter_id=chapter.id) }}" style="display: inline;">
-                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete this chapter?');">🗑️</button>
+              <a href="{{ url_for('edit_chapter', chapter_id=chapter.id) }}" class="btn btn-warning btn-sm"> Edit</a>
+              <form method="POST" action="{{ url_for('delete_chapter', chapter_id=chapter.id) }}" class="inline-delete" style="display: inline;">
+                <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Delete this chapter?');">Delete</button>
               </form>
             </div>
           </div>
@@ -307,7 +314,7 @@
         <strong>Duration:</strong> {{ quiz.time_duration }} mins | 
         <strong>Remarks:</strong> {{ quiz.remarks }}
         <a href="{{ url_for('view_quiz', quiz_id=quiz.id) }}" class="btn btn-info">View</a>
-        <form method="POST" action="{{ url_for('delete_quiz', quiz_id=quiz.id) }}" style="display: inline;">
+        <form method="POST" action="{{ url_for('delete_quiz', quiz_id=quiz.id) }}" class="inline-delete" style="display: inline;">
           <input type="hidden" name="_method" value="DELETE">
           <button type="submit" class="btn btn-danger" onclick="return confirm('Delete this quiz?');">Delete</button>
         </form>

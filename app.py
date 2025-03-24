@@ -650,7 +650,41 @@ def summary():
 
 @app.route('/score')
 def score():
-    return render_template('score.html')
+    # Ensure user is logged in before showing scores
+    user_id = session.get('user_id')
+    if not user_id:
+        flash("Please log in to view your scores.", "danger")
+        return redirect(url_for('login'))
+
+    # Get all score records for the current user
+    scores = Score.query.filter_by(user_id=user_id).all()
+
+    # Optimize by fetching related quiz records in one query
+    quiz_ids = [score.quiz_id for score in scores]
+    quizzes = Quiz.query.filter(Quiz.id.in_(quiz_ids)).all()
+    quiz_map = {quiz.id: quiz for quiz in quizzes}
+
+    # Gather unique chapter IDs to compute total questions per quiz
+    chapter_ids = {quiz.chapter_id for quiz in quizzes}
+    question_counts = {}
+    for chapter_id in chapter_ids:
+        count = Question.query.filter_by(chapter_id=chapter_id).count()
+        question_counts[chapter_id] = count
+
+    # Prepare score data for the template
+    score_data = []
+    for score_record in scores:
+        quiz = quiz_map.get(score_record.quiz_id)
+        if quiz:
+            total_questions = question_counts.get(quiz.chapter_id, 0)
+            score_data.append({
+                "quiz_name": quiz.name,
+                "attempt_date": score_record.time_stamp_of_attempt,
+                "obtained_marks": score_record.total_scored,
+                "total_marks": total_questions
+            })
+
+    return render_template('score.html', score_data=score_data)
 
 @app.route('/search')
 def search():

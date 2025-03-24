@@ -1,0 +1,32 @@
+{% extends 'base1.html' %}
+
+{% block title %}Score{% endblock %}
+
+{% block content %}
+<h1 class="text-center">Your Quiz Scores</h1>
+
+{% if score_data %}
+  <table style="width: 100%; border-collapse: collapse; margin: 20px auto;">
+    <thead>
+      <tr style="background-color: #3a3d98; color: #fff;">
+        <th style="padding: 10px; border: 1px solid #ddd;">Quiz Name</th>
+        <th style="padding: 10px; border: 1px solid #ddd;">Attempted Date</th>
+        <th style="padding: 10px; border: 1px solid #ddd;">Score (Obtained/Total)</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for record in score_data %}
+      <tr>
+        <td style="padding: 10px; border: 1px solid #ddd;">{{ record.quiz_name }}</td>
+        <td style="padding: 10px; border: 1px solid #ddd;">
+          {{ record.attempt_date.strftime('%d-%m-%Y') if record.attempt_date else 'N/A' }}
+        </td>
+        <td style="padding: 10px; border: 1px solid #ddd;">{{ record.obtained_marks }}/{{ record.total_marks }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+  <p class="text-center">No quiz scores available.</p>
+{% endif %}
+{% endblock %}
