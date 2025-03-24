@@ -2,65 +2,67 @@
 
 {% block title %}Search Results{% endblock %}
 
-{% block styles %}
+{% block content %}
 <style>
-  /* Subject Card Styles */
-  .subject-card {
-      border-radius: 10px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      position: relative;
-      overflow: hidden;https://www.msn.com/en-us/news/politics/why-are-scotus-and-judges-being-careful-in-their-rulings-against-trump-fmr-federal-prosecutor-explains/vi-AA1BsPZ1
-      transition: transform 0.3s ease;
+  /* Force small primary button styling on this page */
+  a.btn.btn-primary,
+  a.btn.btn-primary.btn-sm,
+  button.btn.btn-primary,
+  button.btn.btn-primary.btn-sm {
+    background-color: #3a3d98 !important;
+    color: #fff !important;
+    padding: 0.5rem 0.75rem !important;
+    font-size: 0.8rem !important;
+    border: none !important;
+    border-radius: 8px !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.15) !important;
+    transition: background-color 0.3s ease !important;
   }
-  .subject-card:hover {
-      transform: translateY(-5px);
-  }
-  .subject-card .edit-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
+  a.btn.btn-primary:hover,
+  button.btn.btn-primary:hover {
+    background-color: #272a73 !important;
   }
 
-  /* Chapter Item Styles */
-  .chapter-item {
-      padding: 15px;
-      background-color: #fff;
-      border: 1px solid #eee;
-      border-radius: 5px;
-      margin-bottom: 10px;
-      position: relative;
-      transition: background-color 0.3s ease;
+  /* Table styling for a clean, modern look */
+  table.custom-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 30px;
   }
-  .chapter-item:hover {
+  table.custom-table thead {
+      background-color: #3a3d98;
+      color: #fff;
+  }
+  table.custom-table th,
+  table.custom-table td {
+      padding: 12px 15px;
+      border: 1px solid #ddd;
+      text-align: left;
+  }
+  table.custom-table tbody tr:nth-child(even) {
       background-color: #f9f9f9;
   }
-  .chapter-item .edit-btn {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      right: 15px;
+  table.custom-table tbody tr:hover {
+      background-color: #f1f1f1;
   }
-  .btn {
-    display: inline-block;
-    padding: 0.75rem 1.5rem;
-    background-color: #007BFF;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 4px;
-    transition: background-color 0.3s ease;
+  table.custom-table th {
+      font-weight: bold;
+      letter-spacing: 0.5px;
   }
-  /* Increase specificity for the admin dashboard button */
-  a.btn.btn-primary {
-      background-color: #007BFF;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 4px;
-      transition: background-color 0.3s ease;
+
+  /* General container adjustments */
+  .container {
+      max-width: 900px;
+      margin: 50px auto;
+  }
+  .mb-5 {
+      margin-bottom: 3rem !important;
+  }
+  .mt-4 {
+      margin-top: 2rem !important;
   }
 </style>
-{% endblock %}
 
-{% block content %}
 <div class="container py-5">
     <div class="text-center mb-5">
         <h2 class="display-4 text-primary">Search Results for "{{ query }}"</h2>
@@ -70,42 +72,32 @@
     {% if subjects %}
     <div class="mb-5">
         <h3 class="mb-4 text-secondary">Subjects</h3>
-        <div class="row">
-            {% for subject in subjects %}
-            <div class="col-md-6 mb-4">
-                <div class="card subject-card">
-                    <div class="card-body">
-                        <h4 class="card-title text-dark">{{ subject.subject_name }}</h4>
-                        <p class="card-text text-muted">{{ subject.description }}</p>
-                        {% set total_questions = 0 %}
-                        {% for chapter in subject.chapters %}
-                            {% set total_questions = total_questions + chapter.questions|length %}
-                        {% endfor %}
-                        <p class="mb-3">
-                          <em>Total Questions in Subject: </em>
-                          <strong class="text-info">{{ total_questions }}</strong>
-                        </p>
-                        <a href="{{ url_for('edit_subject', subject_id=subject.id) }}" class="btn btn-primary btn-sm edit-btn">Edit Subject</a>
-                        {% if subject.chapters %}
-                        <hr>
-                        <h5 class="text-secondary">Chapters:</h5>
-                        <ul class="list-group list-group-flush">
-                            {% for chapter in subject.chapters %}
-                            <li class="list-group-item chapter-item">
-                                <span>
-                                    {{ chapter.chapter_name }} - {{ chapter.description }}
-                                    (<strong>{{ chapter.questions|length }} questions</strong>)
-                                </span>
-                                <a href="{{ url_for('edit_chapter', chapter_id=chapter.id) }}" class="btn btn-outline-secondary btn-sm edit-btn">Edit Chapter</a>
-                            </li>
-                            {% endfor %}
-                        </ul>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Subject Name</th>
+                    <th>Description</th>
+                    <th>Total Questions</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for subject in subjects %}
+                    {% set total_questions = 0 %}
+                    {% for chapter in subject.chapters %}
+                        {% set total_questions = total_questions + chapter.questions|length %}
+                    {% endfor %}
+                    <tr>
+                        <td>{{ subject.subject_name }}</td>
+                        <td>{{ subject.description }}</td>
+                        <td>{{ total_questions }}</td>
+                        <td>
+                            <a href="{{ url_for('edit_subject', subject_id=subject.id) }}" class="btn btn-primary btn-sm">Edit</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
     {% else %}
     <div class="mb-5">
@@ -115,31 +107,40 @@
     {% endif %}
     
     {% if chapters %}
-    <div>
+    <div class="mb-5">
         <h3 class="mb-4 text-secondary">Chapters</h3>
-        <ul class="list-group">
-            {% for chapter in chapters %}
-            <li class="list-group-item chapter-item">
-                <div>
-                    <h5 class="mb-1 text-dark">{{ chapter.chapter_name }}</h5>
-                    <p class="mb-1 text-muted">{{ chapter.description }}</p>
-                    <small class="text-info">
-                        <strong>{{ chapter.questions|length }} questions</strong>
-                    </small>
-                </div>
-                <a href="{{ url_for('edit_chapter', chapter_id=chapter.id) }}" class="btn btn-outline-secondary btn-sm edit-btn">Edit Chapter</a>
-            </li>
-            {% endfor %}
-        </ul>
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Chapter Name</th>
+                    <th>Description</th>
+                    <th>Total Questions</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for chapter in chapters %}
+                    <tr>
+                        <td>{{ chapter.chapter_name }}</td>
+                        <td>{{ chapter.description }}</td>
+                        <td>{{ chapter.questions|length }}</td>
+                        <td>
+                            <a href="{{ url_for('edit_chapter', chapter_id=chapter.id) }}" class="btn btn-primary btn-sm">Edit</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
     {% else %}
-    <div>
+    <div class="mb-5">
         <h3 class="mb-4 text-secondary">Chapters</h3>
         <p class="text-muted">No chapters found matching your query.</p>
     </div>
-    <div class="text-center">
-        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-primary">Back to Dashboard</a>
-    </div>
     {% endif %}
+    
+    <div class="text-center">
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-primary btn-sm">Back to Dashboard</a>
+    </div>
 </div>
 {% endblock %}

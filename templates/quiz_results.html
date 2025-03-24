@@ -1,8 +1,26 @@
-{% extends 'base.html' %}
+{% extends 'base1.html' %}
 
 {% block title %}Quiz Results{% endblock %}
 
 {% block content %}
+<style>
+    .btn.btn-primary {
+        display: inline-block;
+        padding: 0.75rem;
+        font-size: 1rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        background-color: #3a3d98;
+        color: #fff;
+        text-decoration: none;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+        transition: background 0.3s;
+    }
+    .btn.btn-primary:hover {
+        background-color: #272a73;
+    }
+</style>
 <div class="container mt-5">
     <h1 class="text-center">Quiz Results for: {{ quiz.name }}</h1>
     <h2>Your Score: {{ score }} out of {{ total_questions }} ({{ '%.2f' | format(score_percentage) }}%)</h2>
@@ -17,12 +35,12 @@
         {% endif %}
     </div>
 
-    <h3 class="mt-4">Your Answers:</h3>
+    <!-- <h3 class="mt-4">Your Answers:</h3> -->
     <div class="list-group">
         {% for question in questions %}
             <div class="list-group-item">
                 <h5>Question {{ loop.index }}: {{ question.question_statement }}</h5>
-                <p>Your Answer: {{ user_answers[loop.index0] }}</p>
+                <!-- <p>Your Answer: {{ user_answers[loop.index0] }}</p> -->
                 <p>Correct Answer: {{ question.correct_answer }}</p>
             </div>
         {% endfor %}
