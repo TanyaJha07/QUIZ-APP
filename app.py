@@ -587,6 +587,10 @@ def add_question():
 def summary():
     return render_template('summary.html')
 
+@app.route('/summary1')
+def summary1():
+    return render_template('summary1.html')
+
 @app.route('/score')
 def score():
     return render_template('score.html')
