@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+{% block title %}Summary - Admin Dashboard{% endblock %}
+
+{% block content %}
+<h1>Summary</h1>
+<div style="display: flex; flex-wrap: wrap; justify-content: space-around; align-items: center;">
+  <!-- Smaller Doughnut Chart for Subject-wise Top Score -->
+  <div style="flex: 1; min-width: 200px; text-align: center; margin: 20px; width: 200px; height: 200px;">
+    <h2>Subject-wise Top Score</h2>
+    <canvas id="topScoreChart" style="width: 100%; height: 100%;"></canvas>
+  </div>
+  <!-- Bar Chart for Subject-wise User Attempts -->
+  <div style="flex: 1; min-width: 300px; text-align: center; margin: 20px;">
+    <h2>Subject-wise User Attempts</h2>
+    <canvas id="attemptChart"></canvas>
+  </div>
+</div>
+
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  // Doughnut Chart for Subject-wise Top Score
+  const topScoreLabels = {{ top_score_labels|tojson }};
+  const topScoreValues = {{ top_score_values|tojson }};
+  const ctxTop = document.getElementById('topScoreChart').getContext('2d');
+  const topScoreChart = new Chart(ctxTop, {
+      type: 'doughnut',
+      data: {
+          labels: topScoreLabels,
+          datasets: [{
+              label: 'Top Score',
+              data: topScoreValues,
+              backgroundColor: [
+                  'rgba(255, 99, 132, 0.7)',
+                  'rgba(54, 162, 235, 0.7)',
+                  'rgba(255, 206, 86, 0.7)',
+                  'rgba(75, 192, 192, 0.7)',
+                  'rgba(153, 102, 255, 0.7)',
+                  'rgba(255, 159, 64, 0.7)'
+              ],
+              borderColor: 'rgba(255, 255, 255, 1)',
+              borderWidth: 2
+          }]
+      },
+      options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+              legend: { position: 'top' },
+              title: { display: true, text: 'Subject-wise Top Score' }
+          }
+      }
+  });
+  
+  // Bar Chart for Subject-wise User Attempts
+  const attemptLabels = {{ attempt_labels|tojson }};
+  const attemptValues = {{ attempt_values|tojson }};
+  const ctxAttempt = document.getElementById('attemptChart').getContext('2d');
+  const attemptChart = new Chart(ctxAttempt, {
+      type: 'bar',
+      data: {
+          labels: attemptLabels,
+          datasets: [{
+              label: 'User Attempts',
+              data: attemptValues,
+              backgroundColor: 'rgba(75, 192, 192, 0.7)',
+              borderColor: 'rgba(75, 192, 192, 1)',
+              borderWidth: 1
+          }]
+      },
+      options: {
+          scales: {
+              y: {
+                  beginAtZero: true,
+                  ticks: { precision: 0 }
+              }
+          },
+          plugins: {
+              title: { display: true, text: 'Subject-wise User Attempts' }
+          }
+      }
+  });
+</script>
+{% endblock %}

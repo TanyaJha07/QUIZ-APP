@@ -616,7 +616,37 @@ def summary1():
                            subject_quiz_counts=subject_quiz_counts)
 @app.route('/summary')
 def summary():
-    return render_template('summary.html')
+    from sqlalchemy import func
+    # Query subject-wise top score (maximum total_scored per subject)
+    top_scores_query = db.session.query(
+        Subject.subject_name,
+        func.max(Score.total_scored).label("top_score")
+    ).join(Chapter, Chapter.subject_id == Subject.id)\
+     .join(Quiz, Quiz.chapter_id == Chapter.id)\
+     .join(Score, Score.quiz_id == Quiz.id)\
+     .group_by(Subject.id).all()
+     
+    # Query subject-wise user attempts (count of Score records per subject)
+    attempts_query = db.session.query(
+        Subject.subject_name,
+        func.count(Score.id).label("attempt_count")
+    ).join(Chapter, Chapter.subject_id == Subject.id)\
+     .join(Quiz, Quiz.chapter_id == Chapter.id)\
+     .join(Score, Score.quiz_id == Quiz.id)\
+     .group_by(Subject.id).all()
+    
+    # Process the results into lists for the charts
+    top_score_labels = [row.subject_name for row in top_scores_query]
+    top_score_values = [row.top_score if row.top_score is not None else 0 for row in top_scores_query]
+    
+    attempt_labels = [row.subject_name for row in attempts_query]
+    attempt_values = [row.attempt_count for row in attempts_query]
+    
+    return render_template('summary.html',
+                           top_score_labels=top_score_labels,
+                           top_score_values=top_score_values,
+                           attempt_labels=attempt_labels,
+                           attempt_values=attempt_values)
 
 @app.route('/score')
 def score():
