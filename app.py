@@ -583,14 +583,37 @@ def add_question():
     return redirect(url_for('admin_dashboard'))
 
 #--------------------------------- Other Routes -----------------------------------------
-@app.route('/summary')
-def summary():
-    return render_template('summary.html')
-
 @app.route('/summary1')
 def summary1():
-    return render_template('summary1.html')
+    import calendar
+    from sqlalchemy import func, extract
 
+    # Query month-wise quiz attempts from Score table
+    month_data = db.session.query(
+        extract('month', Score.time_stamp_of_attempt).label('month'),
+        func.count(Score.id)
+    ).group_by('month').all()
+    # Sort by month number
+    month_data = sorted(month_data, key=lambda x: x[0])
+    month_labels = [calendar.month_name[int(m)] for m, count in month_data]
+    month_counts = [count for m, count in month_data]
+
+    # Query quiz count by subject (join Chapter and Quiz)
+    subjects = Subject.query.all()
+    subject_names = []
+    subject_quiz_counts = []
+    for subject in subjects:
+        count = db.session.query(func.count(Quiz.id))\
+            .join(Chapter, Quiz.chapter_id == Chapter.id)\
+            .filter(Chapter.subject_id == subject.id).scalar() or 0
+        subject_names.append(subject.subject_name)
+        subject_quiz_counts.append(count)
+
+    return render_template('summary1.html',
+                           month_labels=month_labels,
+                           month_counts=month_counts,
+                           subject_names=subject_names,
+                           subject_quiz_counts=subject_quiz_counts)
 @app.route('/score')
 def score():
     return render_template('score.html')

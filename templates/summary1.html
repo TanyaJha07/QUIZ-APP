@@ -1,0 +1,93 @@
+{% extends 'base1.html' %}
+{% block title %}Summary{% endblock %}
+
+{% block content %}
+<h1>Summary</h1>
+
+<div style="display: flex; justify-content: space-around; align-items: flex-start; flex-wrap: wrap;">
+    <div style="flex: 1; min-width: 300px; margin: 10px; text-align: center;">
+        <h2>Month-wise Quiz Attempts</h2>
+        <!-- Container with fixed dimensions for a smaller pie chart -->
+        <div style="width: 250px; height: 250px; margin: auto;">
+            <canvas id="pieChart"></canvas>
+        </div>
+    </div>
+    <div style="flex: 1; min-width: 300px; margin: 10px; text-align: center;">
+        <h2>Quiz Count by Subject</h2>
+        <canvas id="barChart"></canvas>
+    </div>
+</div>
+
+<!-- Include Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Data for pie chart (month-wise quiz attempts)
+    const monthLabels = {{ month_labels|tojson }};
+    const monthCounts = {{ month_counts|tojson }};
+
+    const pieCtx = document.getElementById('pieChart').getContext('2d');
+    const pieChart = new Chart(pieCtx, {
+        type: 'pie',
+        data: {
+            labels: monthLabels,
+            datasets: [{
+                data: monthCounts,
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.7)',
+                    'rgba(54, 162, 235, 0.7)',
+                    'rgba(255, 206, 86, 0.7)',
+                    'rgba(75, 192, 192, 0.7)',
+                    'rgba(153, 102, 255, 0.7)',
+                    'rgba(255, 159, 64, 0.7)',
+                    'rgba(199, 199, 199, 0.7)',
+                    'rgba(83, 102, 255, 0.7)',
+                    'rgba(255, 99, 71, 0.7)',
+                    'rgba(60, 179, 113, 0.7)',
+                    'rgba(106, 90, 205, 0.7)',
+                    'rgba(0, 191, 255, 0.7)'
+                ],
+                borderColor: 'rgba(255, 255, 255, 1)',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false, // ensures the canvas uses the container's dimensions
+            plugins: {
+                legend: {
+                    position: 'top',
+                }
+            }
+        }
+    });
+
+    // Data for bar chart (quiz count by subject)
+    const subjectNames = {{ subject_names|tojson }};
+    const subjectQuizCounts = {{ subject_quiz_counts|tojson }};
+
+    const barCtx = document.getElementById('barChart').getContext('2d');
+    const barChart = new Chart(barCtx, {
+        type: 'bar',
+        data: {
+            labels: subjectNames,
+            datasets: [{
+                label: 'Quiz Count',
+                data: subjectQuizCounts,
+                backgroundColor: 'rgba(75, 192, 192, 0.7)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        precision: 0
+                    }
+                }
+            }
+        }
+    });
+</script>
+{% endblock %}
