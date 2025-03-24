@@ -685,7 +685,7 @@ def score():
             })
 
     return render_template('score.html', score_data=score_data)
-
+# search for admins
 @app.route('/search')
 def search():
     if "user_id" not in session or session.get("user_role") != "admin":
@@ -705,6 +705,43 @@ def search():
         ).all()
 
     return render_template("search.html", query=query, subjects=subjects, chapters=chapters)
+# search user
+# Add this new route to your app.py
+
+@app.route('/search1', methods=['GET'])
+def user_search():
+    # Ensure the user is logged in and is a regular user
+    if "user_id" not in session or session.get("user_role") != "user":
+        flash("Unauthorized access!", "danger")
+        return redirect(url_for("login"))
+    
+    query = request.args.get("query", "").strip()
+    quizzes = []
+    
+    if query:
+        from sqlalchemy import or_, func
+        # Search by quiz name, quiz date (formatted as YYYY-MM-DD), chapter name, or subject name.
+        quizzes = Quiz.query.join(Chapter).join(Subject).filter(
+            or_(
+                Quiz.name.ilike(f"%{query}%"),
+                func.strftime('%Y-%m-%d', Quiz.date_of_quiz).ilike(f"%{query}%"),
+                Chapter.chapter_name.ilike(f"%{query}%"),
+                Subject.subject_name.ilike(f"%{query}%")
+            )
+        ).all()
+        
+        # If query is numeric, also search based on the user's score for the quiz.
+        if query.isdigit():
+            numeric_query = int(query)
+            user_scores = Score.query.filter_by(user_id=session.get("user_id"), total_scored=numeric_query).all()
+            quiz_ids = [score.quiz_id for score in user_scores]
+            quiz_by_score = Quiz.query.filter(Quiz.id.in_(quiz_ids)).all()
+            # Merge both results (removing duplicates)
+            quizzes = list({q.id: q for q in quizzes + quiz_by_score}.values())
+    else:
+        quizzes = Quiz.query.order_by(Quiz.date_of_quiz).all()
+    
+    return render_template("search1.html", query=query, quizzes=quizzes)
 
 @app.route('/logout')
 def logout():

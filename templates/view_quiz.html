@@ -71,60 +71,78 @@
         margin: 0.3rem 0 0 0;
     }
 
-    /* Button styling for smaller buttons */
+    /* Updated Button Styling to match Admin Dashboard */
+    .btn {
+        display: inline-block;
+        padding: 0.75rem;
+        font-size: 1rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        background-color: #3a3d98;
+        color: #fff;
+        text-decoration: none;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+        transition: background 0.3s;
+    }
+    .btn:hover {
+        background-color: #272a73;
+    }
+
     .btn-sm {
         display: inline-block;
-        padding: 0.25rem 0.5rem;
-        font-size: 0.7rem;
+        padding: 4px 8px;
+        font-size: 12px;
+        font-weight: bold;
         border: none;
-        border-radius: 3px;
+        border-radius: 8px;
         cursor: pointer;
         text-decoration: none;
-        margin-left: 0.3rem;
     }
 
     .btn-warning {
-        background-color: #007BFF;
+        background-color: #3a3d98;
         color: #fff;
-        transition: background-color 0.3s ease;
+        transition: background 0.3s;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        text-decoration: none;
     }
-
     .btn-warning:hover {
-        background-color: #0056b3;
+        background-color: #272a73;
     }
 
     .btn-danger {
+        display: inline-block;
+        padding: 0.75rem;
+        font-size: 1rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
         background-color: #e74c3c;
         color: #fff;
-        transition: background-color 0.3s ease;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.15);
+        transition: background 0.3s;
     }
-
     .btn-danger:hover {
         background-color: #c0392b;
+    }
+
+    /* New CSS rule to reduce delete button size in the questions list */
+    .questions-list .btn-danger {
+        padding: 0.3rem 0.5rem;
+        font-size: 0.8rem;
+        border-radius: 6px;
     }
 
     /* Centered button styling remains unchanged */
     .text-center {
         text-align: center;
     }
-
-    .btn {
-        display: inline-block;
-        padding: 0.5rem 1rem;
-        background-color: #007BFF;
-        color: #fff;
-        text-decoration: none;
-        border-radius: 4px;
-        transition: background-color 0.3s ease;
-        font-size: 0.9rem;
-    }
-
-    .btn:hover {
-        background-color: #0056b3;
-    }
 </style>
 <div class="text-center">
-    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-primary">Back to Dashboard</a>
+    <a href="{{ url_for('admin_dashboard') }}" class="btn">Back to Dashboard</a>
 </div>
 <div class="container">
     <h1 class="text-center">Quiz Details</h1>
@@ -163,7 +181,5 @@
             {% endfor %}
         </ul>
     </div>
-
-
 </div>
 {% endblock %}

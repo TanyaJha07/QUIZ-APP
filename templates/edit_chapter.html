@@ -3,39 +3,75 @@
 {% block title %}Quiz Master - Edit Chapter{% endblock %}
 
 {% block content %}
-<div style="max-width: 600px; margin: 50px auto; background: #ffffff; padding: 20px; border-radius: 12px; 
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); text-align: center;">
-    <h2 style="color: #34495e; font-weight: bold;">Edit Chapter</h2>
-    
-    <form method="POST">
-        <div style="margin-bottom: 15px; text-align: left;">
-            <label style="font-weight: bold; display: block; margin-bottom: 5px;">Chapter Name</label>
-            <input type="text" name="chapter_name" value="{{ chapter.chapter_name }}" required
-                   style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; 
-                          box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);">
-        </div>
-        
-        <div style="margin-bottom: 15px; text-align: left;">
-            <label style="font-weight: bold; display: block; margin-bottom: 5px;">Description</label>
-            <input type="text" name="chapter_description" value="{{ chapter.description }}"
-                   style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; 
-                          box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);">
-        </div>
-        
-        <div style="margin-bottom: 15px; text-align: left;">
-            <label style="font-weight: bold; display: block; margin-bottom: 5px;">Subject</label>
-            <input type="text" value="{{ chapter.subject.subject_name }}" disabled
-                   style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 8px; 
-                          background: #f9f9f9; box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);">
-        </div>
-        
-        <div style="margin-top: 20px;">
-            <button type="submit" 
-                    style="background: #007bff; color: white; border: none; padding: 12px 20px; border-radius: 8px; 
-                           cursor: pointer; box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); font-size: 16px;">
-                ✏️ Edit Chapter
-            </button>
-        </div>
-    </form>
+<style>
+  .edit-chapter-container {
+    max-width: 600px;
+    margin: 50px auto;
+    background: #ffffff;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+  }
+  .edit-chapter-container h2 {
+    color: #34495e;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  .edit-chapter-container .form-group {
+    margin-bottom: 15px;
+    text-align: left;
+  }
+  .edit-chapter-container label {
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+  }
+  .edit-chapter-container input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+  }
+  .edit-chapter-container input[disabled] {
+    background: #f9f9f9;
+  }
+  .edit-chapter-container button {
+    background: #3a3d98;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    font-size: 16px;
+    display: block;
+    margin: 20px auto 0 auto;
+  }
+  .edit-chapter-container button:hover {
+    background: #272a73;
+  }
+</style>
+
+<div class="edit-chapter-container">
+  <h2>Edit Chapter</h2>
+  <form method="POST">
+    <div class="form-group">
+      <label for="chapter_name">Chapter Name</label>
+      <input type="text" name="chapter_name" id="chapter_name" value="{{ chapter.chapter_name }}" required>
+    </div>
+    <div class="form-group">
+      <label for="chapter_description">Description</label>
+      <input type="text" name="chapter_description" id="chapter_description" value="{{ chapter.description }}">
+    </div>
+    <div class="form-group">
+      <label for="subject">Subject</label>
+      <input type="text" id="subject" value="{{ chapter.subject.subject_name }}" disabled>
+    </div>
+    <div class="form-group">
+      <button type="submit">✏️ Edit Chapter</button>
+    </div>
+  </form>
 </div>
 {% endblock %}
