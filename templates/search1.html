@@ -1,36 +1,110 @@
-<!-- Create a new template file named search1.html -->
-
 {% extends 'base1.html' %}
 
 {% block title %}Search Quizzes{% endblock %}
 
 {% block content %}
-  <div class="container mt-4">
-    <h1 class="text-center">Search Quizzes</h1>
-    <form method="GET" action="{{ url_for('search_handler') }}" class="form-inline justify-content-center mb-4">
-      <div class="form-group mx-sm-3 mb-2">
-        <input type="text" name="query" class="form-control" placeholder="Search by date, score, subject or chapter" value="{{ query }}">
-      </div>
-      <button type="submit" class="btn btn-primary mb-2">Search</button>
-    </form>
-    
-    <h2 class="text-center">Search Results</h2>
-    {% if quizzes %}
-      <ul class="list-group">
-        {% for quiz in quizzes %}
-          <li class="list-group-item">
-            <p><strong>Chapter:</strong> {{ quiz.chapter.chapter_name }}</p>
-            <p><strong>Subject:</strong> {{ quiz.chapter.subject.subject_name }}</p>
-            <p><strong>Name:</strong> {{ quiz.name }}</p>
-            <p><strong>Date:</strong> {{ quiz.date_of_quiz }}</p>
-            <p><strong>Duration:</strong> {{ quiz.time_duration }} mins</p>
-            <p><strong>Remarks:</strong> {{ quiz.remarks }}</p>
-            <a href="{{ url_for('take_quiz', quiz_id=quiz.id) }}" class="btn btn-success">Start Quiz</a>
-          </li>
-        {% endfor %}
-      </ul>
-    {% else %}
-      <p class="text-center">No quizzes found matching your search.</p>
-    {% endif %}
+<style>
+  /* Primary button styling similar to provided style */
+  a.btn.btn-primary,
+  button.btn.btn-primary {
+    background-color: #3a3d98 !important;
+    color: #fff !important;
+    padding: 0.5rem 0.75rem !important;
+    font-size: 0.8rem !important;
+    border: none !important;
+    border-radius: 8px !important;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.15) !important;
+    transition: background-color 0.3s ease !important;
+  }
+  a.btn.btn-primary:hover,
+  button.btn.btn-primary:hover {
+    background-color: #272a73 !important;
+  }
+
+  /* List group styling to match provided table style */
+  ul.custom-list {
+    padding: 0;
+    list-style: none;
+    margin-bottom: 30px;
+  }
+  ul.custom-list li {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-radius: 8px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    transition: background-color 0.2s ease;
+  }
+  ul.custom-list li:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  ul.custom-list li:hover {
+    background-color: #f1f1f1;
+  }
+
+  /* Container adjustments */
+  .container {
+    max-width: 900px;
+    margin: 50px auto;
+  }
+
+  .mt-4 {
+    margin-top: 2rem !important;
+  }
+
+  .mb-4 {
+    margin-bottom: 1.5rem !important;
+  }
+
+  .mb-2 {
+    margin-bottom: 0.75rem !important;
+  }
+
+  h1, h2 {
+    color: #3a3d98;
+  }
+
+  hr.custom-hr {
+    border: 0;
+    border-top: 2px solid #3a3d98;
+    width: 25%;
+    margin: 0.75rem auto 2rem auto;
+  }
+
+</style>
+
+<div class="container mt-4 py-4">
+  <div class="text-center mb-4">
+    <h1 class="display-4">Search Quizzes</h1>
+    <hr class="custom-hr">
   </div>
+
+  <form method="GET" action="{{ url_for('search_handler') }}" class="form-inline justify-content-center mb-4">
+    <div class="form-group mx-sm-3 mb-2">
+      <input type="text" name="query" class="form-control" placeholder="Search by date, score, subject or chapter" value="{{ query }}">
+    </div>
+    <button type="submit" class="btn btn-primary mb-2">Search</button>
+  </form>
+
+  <h2 class="text-center mb-4">Search Results</h2>
+
+  {% if quizzes %}
+    <ul class="custom-list">
+      {% for quiz in quizzes %}
+        <li>
+          <p><strong>Chapter:</strong> {{ quiz.chapter.chapter_name }}</p>
+          <p><strong>Subject:</strong> {{ quiz.chapter.subject.subject_name }}</p>
+          <p><strong>Name:</strong> {{ quiz.name }}</p>
+          <p><strong>Date:</strong> {{ quiz.date_of_quiz }}</p>
+          <p><strong>Duration:</strong> {{ quiz.time_duration }} mins</p>
+          <p><strong>Remarks:</strong> {{ quiz.remarks }}</p>
+          <a href="{{ url_for('take_quiz', quiz_id=quiz.id) }}" class="btn btn-primary btn-sm">Start Quiz</a>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p class="text-center text-muted">No quizzes found matching your search.</p>
+  {% endif %}
+</div>
 {% endblock %}
