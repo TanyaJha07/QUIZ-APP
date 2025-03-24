@@ -3,6 +3,49 @@
 {% block title %}Quizzy {% endblock %}
 
 {% block content %}
+    <style>
+        /* Display quiz containers side by side with reduced container size */
+        .list-group {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            padding: 0;
+            list-style: none;
+        }
+        .list-group-item {
+            flex: 0 1 250px; /* Reduced container width */
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            text-align: left;
+        }
+        .list-group-item p {
+            margin: 5px 0;
+        }
+        /* Style the Start Quiz button to match other buttons */
+        .list-group-item a {
+            display: inline-block;
+            background-color: #3a3d98;
+            color: #fff;
+            text-decoration: none;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background 0.3s;
+            margin-top: 10px;
+            text-align: center;  /* Added to center the text */
+        }
+        .list-group-item a:hover {
+            background-color: #272a73;
+        }
+    </style>
+
     <h1 class="text-center">Welcome to the Quiz App</h1>
     <p class="text-center">Get ready to test your knowledge!</p>
 
@@ -10,12 +53,12 @@
     <ul class="list-group">
         {% for quiz in quiz %}
         <li class="list-group-item">
-            <strong>Chapter:</strong> {{ quiz.chapter_id }} | 
-            <strong>{{ quiz.name }}</strong> | 
-            <strong>Date:</strong> {{ quiz.date_of_quiz }} | 
-            <strong>Duration:</strong> {{ quiz.time_duration }} mins | 
-            <strong>Remarks:</strong> {{ quiz.remarks }} | 
-            <a class="btn btn-primary btn-sm float-end" href="{{ url_for('take_quiz', quiz_id=quiz.id) }}">Start Quiz</a>
+            <p><strong>Chapter:</strong> {{ quiz.chapter_id }}</p>
+            <p><strong>Name:</strong> {{ quiz.name }}</p>
+            <p><strong>Date:</strong> {{ quiz.date_of_quiz }}</p>
+            <p><strong>Duration:</strong> {{ quiz.time_duration }} mins</p>
+            <p><strong>Remarks:</strong> {{ quiz.remarks }}</p>
+            <a href="{{ url_for('take_quiz', quiz_id=quiz.id) }}">Start Quiz</a>
         </li>
         {% else %}
             <li class="list-group-item">No quizzes available at the moment.</li>
